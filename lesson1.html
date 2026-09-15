@@ -2,109 +2,111 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>1과 플래시 카드 · Lesson 1 Flashcards</title>
 <style>
+  :root{
+    --navy:#1F3864; --accent:#C0504D; --ink:#22262e; --muted:#7b8494;
+    --line:#dfe4ec; --bg:#eef1f6; --card:#ffffff; --front:#f4f7fb;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
   body{
-    margin:0; padding:14px;
-    font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",-apple-system,sans-serif;
-    background:#eef1f6; color:#22262e;
-    -webkit-text-size-adjust:100%;
+    font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+    background:var(--bg); color:var(--ink);
+    min-height:100dvh; display:flex; flex-direction:column; align-items:center;
+    padding:14px 14px calc(14px + env(safe-area-inset-bottom));
   }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:rgba(0,0,0,0)}
-  .wrap{max-width:520px; margin:0 auto}
+  .wrap{width:100%; max-width:520px; display:flex; flex-direction:column; gap:12px}
 
-  h1{margin:0; font-size:19px; color:#1F3864}
-  .sub{margin:3px 0 12px; font-size:12px; color:#7b8494; font-style:italic}
+  header h1{margin:0; font-size:19px; color:var(--navy); letter-spacing:-.2px}
+  header p{margin:3px 0 0; font-size:12px; color:var(--muted); font-style:italic}
 
-  .bar{margin-bottom:10px}
+  .bar{display:flex; gap:6px; flex-wrap:wrap; align-items:center}
   .chip{
-    display:inline-block; border:1px solid #dfe4ec; background:#fff; color:#22262e;
-    padding:8px 14px; border-radius:20px; font-size:13px; font-family:inherit;
-    margin:0 5px 5px 0; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    padding:7px 13px; border-radius:999px; font-size:13px; cursor:pointer; font-family:inherit;
   }
-  .chip.on{background:#1F3864; color:#fff; border-color:#1F3864}
-  .chip.ghost{color:#7b8494; float:right; margin-right:0}
-  .clear{clear:both}
+  .chip[aria-pressed="true"]{background:var(--navy); color:#fff; border-color:var(--navy)}
+  .chip.ghost{margin-left:auto; color:var(--muted)}
 
-  .meter{font-size:12px; color:#7b8494; margin-bottom:8px}
-  .track{height:5px; background:#dde3ec; border-radius:4px; overflow:hidden; margin-top:5px}
-  .fill{height:5px; width:0; background:#1F3864}
+  .meter{display:flex; align-items:center; gap:9px; font-size:12px; color:var(--muted)}
+  .track{flex:1; height:5px; background:#dde3ec; border-radius:99px; overflow:hidden}
+  .fill{height:100%; width:0; background:var(--navy); border-radius:99px; transition:width .25s}
 
-  /* 3D 변환을 쓰지 않는다 — iPad Safari 호환 */
+  .scene{perspective:1200px}
   .card{
-    position:relative; width:100%; height:280px;
-    border:1px solid #dfe4ec; border-radius:16px; background:#fff;
-    cursor:pointer; overflow:hidden;
-    -webkit-box-shadow:0 2px 10px rgba(31,56,100,.07);
-            box-shadow:0 2px 10px rgba(31,56,100,.07);
+    position:relative; width:100%; aspect-ratio:1.55/1; min-height:230px;
+    transform-style:preserve-3d; transition:transform .45s cubic-bezier(.2,.7,.3,1);
+    cursor:pointer;
   }
+  .card.flipped{transform:rotateY(180deg)}
   .face{
-    position:absolute; top:0; right:0; bottom:0; left:0;
-    padding:14px; text-align:center;
-    display:-webkit-box; display:-webkit-flex; display:flex;
-    -webkit-box-orient:vertical; -webkit-flex-direction:column; flex-direction:column;
-    -webkit-box-pack:center; -webkit-justify-content:center; justify-content:center;
-    -webkit-box-align:center; -webkit-align-items:center; align-items:center;
-    -webkit-transition:opacity .18s linear; transition:opacity .18s linear;
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    border:1px solid var(--line); border-radius:16px; background:var(--card);
+    box-shadow:0 2px 10px rgba(31,56,100,.07);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:16px; text-align:center; overflow:hidden;
   }
-  .face.front{background:#f4f7fb}
-  .face.back{background:#fff}
-  .card .back{opacity:0; visibility:hidden}
-  .card.flipped .front{opacity:0; visibility:hidden}
-  .card.flipped .back{opacity:1; visibility:visible}
+  .face.front{background:var(--front)}
+  .face.back{transform:rotateY(180deg)}
 
-  .glyph{font-weight:700; color:#1F3864; line-height:1.05}
-  .glyph.v{font-size:120px}
-  .glyph.g{font-size:34px; line-height:1.3}
-  .kind{margin-top:10px; font-size:11px; color:#b3bbc8}
+  .glyph{font-weight:700; color:var(--navy); line-height:1.05}
+  .glyph.v{font-size:clamp(90px,26vw,140px)}
+  .glyph.g{font-size:clamp(28px,8.4vw,42px); line-height:1.25}
+  .kind{margin-top:10px; font-size:11px; color:#b3bbc8; letter-spacing:.4px}
 
-  .rom{font-size:32px; font-weight:700; color:#C0504D; margin:6px 0 4px}
-  .tip-ko{font-size:17px; margin:2px 0}
-  .tip-en{font-size:13px; color:#7b8494; font-style:italic; margin:2px 0 8px}
-  .tip-en.warn{color:#C0504D}
-  .word{font-size:20px; font-weight:700; color:#1F3864}
-  .word span{font-weight:400; color:#7b8494; font-size:14px; margin-left:6px}
-  .mean{font-size:24px; margin:2px 0 6px}
-  .when{font-size:13px; color:#666}
-  svg.mouth{width:92px; height:69px; display:block; margin-bottom:4px}
+  .rom{font-size:clamp(26px,8vw,38px); font-weight:700; color:var(--accent); margin:6px 0 4px}
+  .tip-ko{font-size:clamp(15px,4.3vw,18px); margin:2px 0}
+  .tip-en{font-size:clamp(12px,3.4vw,14px); color:var(--muted); font-style:italic; margin:2px 0 8px}
+  .tip-en.warn{color:var(--accent)}
+  .word{font-size:clamp(17px,5vw,22px); font-weight:700; color:var(--navy)}
+  .word small{font-weight:400; color:var(--muted); font-size:.72em; margin-left:6px}
+  .mean{font-size:clamp(20px,6vw,27px); margin:2px 0 6px}
+  .when{font-size:clamp(12px,3.6vw,15px); color:#666}
+  svg.mouth{width:clamp(82px,22vw,104px); height:auto; display:block; margin-bottom:2px}
 
+  .hint{text-align:center; font-size:11.5px; color:var(--muted)}
+
+  .row{display:flex; gap:8px}
+  button.act{
+    flex:1; padding:13px 8px; border-radius:12px; border:1px solid var(--line);
+    background:#fff; font-size:14px; font-family:inherit; cursor:pointer; color:var(--ink);
+  }
+  button.act:active{transform:translateY(1px)}
+  button.act.good{border-color:#a8c8a0; color:#2f6b2a}
+  button.act.again{border-color:#e3b3b1; color:var(--accent)}
+  button.act.nav{flex:0 0 58px; color:var(--muted)}
+  button.act:disabled{opacity:.35; cursor:default}
   .speak{
-    position:absolute; top:8px; right:10px; border:0; background:transparent;
-    font-size:20px; padding:6px; cursor:pointer; opacity:.55; line-height:1;
+    position:absolute; top:10px; right:12px; border:none; background:transparent;
+    font-size:19px; cursor:pointer; opacity:.5; padding:4px;
   }
-  .hint{text-align:center; font-size:11.5px; color:#7b8494; margin:8px 0 6px}
+  .speak:hover{opacity:1}
 
-  .btn{
-    display:block; width:100%; padding:14px 6px; margin:0;
-    border:1px solid #dfe4ec; border-radius:12px; background:#fff;
-    font-size:14px; font-family:inherit; color:#22262e; cursor:pointer;
-    -webkit-appearance:none; appearance:none;
+  .done{
+    background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px 18px; text-align:center;
   }
-  .btn.good{border-color:#a8c8a0; color:#2f6b2a}
-  .btn.again{border-color:#e3b3b1; color:#C0504D}
-  .btn[disabled]{opacity:.35}
-  .cols{width:100%; border-collapse:separate; border-spacing:4px 0; table-layout:fixed}
-  .cols td{padding:0}
-  .cols td.narrow{width:56px}
-
-  .done{background:#fff; border:1px solid #dfe4ec; border-radius:16px; padding:26px 18px; text-align:center}
-  .done h2{margin:0 0 6px; font-size:21px; color:#1F3864}
-  .done p{margin:4px 0; font-size:14px; color:#7b8494}
-  .score{font-size:40px; font-weight:700; color:#1F3864; margin:12px 0}
-  .hide{display:none}
+  .done h2{margin:0 0 6px; font-size:21px; color:var(--navy)}
+  .done p{margin:4px 0; font-size:14px; color:var(--muted)}
+  .score{font-size:40px; font-weight:700; color:var(--navy); margin:12px 0}
+  .done .row{margin-top:16px}
+  .hide{display:none !important}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <h1>1과 플래시 카드 — 모음과 인사</h1>
-  <div class="sub">Lesson 1 · Tap the card to flip.</div>
+  <header>
+    <h1>1과 플래시 카드 — 모음과 인사</h1>
+    <p>Lesson 1 · Tap the card to flip. Vowels and greetings.</p>
+  </header>
 
   <div class="bar">
-    <button class="chip on" id="d-all">전체 All</button><button class="chip" id="d-vowel">모음 Vowels</button><button class="chip" id="d-greet">인사 Greetings</button><button class="chip ghost" id="shuffle">섞기 Shuffle</button>
-    <div class="clear"></div>
+    <button class="chip" data-deck="all" aria-pressed="true">전체 All</button>
+    <button class="chip" data-deck="vowel" aria-pressed="false">모음 Vowels</button>
+    <button class="chip" data-deck="greet" aria-pressed="false">인사 Greetings</button>
+    <button class="chip ghost" id="shuffle">섞기 Shuffle</button>
   </div>
 
   <div class="meter">
@@ -113,17 +115,19 @@
   </div>
 
   <div id="study">
-    <div class="card" id="card">
-      <div class="face front" id="front"></div>
-      <div class="face back" id="back"></div>
+    <div class="scene">
+      <div class="card" id="card">
+        <div class="face front" id="front"></div>
+        <div class="face back" id="back"></div>
+      </div>
     </div>
-    <div class="hint">카드를 누르면 뒤집힙니다 &middot; Tap to flip</div>
-    <table class="cols"><tr>
-      <td class="narrow"><button class="btn" id="prev">&#8592;</button></td>
-      <td><button class="btn again" id="again">다시 Again</button></td>
-      <td><button class="btn good" id="know">알아요 Got it</button></td>
-      <td class="narrow"><button class="btn" id="next">&#8594;</button></td>
-    </tr></table>
+    <p class="hint" id="hint">카드를 누르면 뒤집힙니다 · Tap to flip &nbsp;·&nbsp; Space / ← →</p>
+    <div class="row" style="margin-top:2px">
+      <button class="act nav" id="prev" title="이전">←</button>
+      <button class="act again" id="again">다시 Again</button>
+      <button class="act good" id="know">알아요 Got it</button>
+      <button class="act nav" id="next" title="다음">→</button>
+    </div>
   </div>
 
   <div id="result" class="done hide">
@@ -131,152 +135,151 @@
     <p>Round finished</p>
     <div class="score" id="score">0 / 0</div>
     <p id="resultMsg"></p>
-    <table class="cols" style="margin-top:14px"><tr>
-      <td><button class="btn again" id="retryWrong">틀린 것만</button></td>
-      <td><button class="btn" id="retryAll">처음부터</button></td>
-    </tr></table>
+    <div class="row">
+      <button class="act again" id="retryWrong">틀린 것만 Again only</button>
+      <button class="act" id="retryAll">처음부터 Restart</button>
+    </div>
   </div>
 
 </div>
 
 <script>
+// ── 입 모양 SVG ────────────────────────────────
 function mouth(ow, oh, rounded){
-  var cx=100, cy=75;
-  var lw=ow+(rounded?44:30), lh=oh+(rounded?44:30);
-  var tongue = oh>46 ? '<ellipse cx="'+cx+'" cy="'+(cy+oh*0.28)+'" rx="'+(ow/3)+'" ry="'+(oh/6)+'" fill="#b96e6e"/>' : '';
-  function arrow(dx){
-    var far  = cx + dx*(lw/2 + (rounded?14:24));
-    var near = cx + dx*(lw/2 + (rounded?2:6));
-    var a = rounded ? far : near;
-    var b = rounded ? near : far;
-    return '<line x1="'+a+'" y1="'+cy+'" x2="'+b+'" y2="'+cy+'" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/>'
-         + '<polygon points="'+b+','+cy+' '+(b-dx*10)+','+(cy-7)+' '+(b-dx*10)+','+(cy+7)+'" fill="#1F3864"/>';
-  }
-  return '<svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">'
-    + '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(lw/2)+'" ry="'+(lh/2)+'" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/>'
-    + '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(ow/2)+'" ry="'+(oh/2)+'" fill="#5a282d" stroke="#461e23" stroke-width="2"/>'
-    + tongue + arrow(-1) + arrow(1) + '</svg>';
+  const W=200,H=150,cx=100,cy=75;
+  const lw=ow+(rounded?44:30), lh=oh+(rounded?44:30);
+  const tongue = oh>46
+    ? `<ellipse cx="${cx}" cy="${cy+oh*0.28}" rx="${ow/3}" ry="${oh/6}" fill="#b96e6e"/>` : '';
+  const arrow = (dx)=>{
+    const tipIn = rounded;
+    const x0 = cx + dx*(lw/2 + (tipIn?14:24));
+    const x1 = cx + dx*(lw/2 + (tipIn?2:6));
+    const [ax,bx] = tipIn ? [x0,x1] : [x1,x0];
+    return `<line x1="${ax}" y1="${cy}" x2="${bx}" y2="${cy}" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="${bx},${cy} ${bx-dx*10},${cy-7} ${bx-dx*10},${cy+7}" fill="#1F3864"/>`;
+  };
+  return `<svg class="mouth" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="${cx}" cy="${cy}" rx="${lw/2}" ry="${lh/2}" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="${ow/2}" ry="${oh/2}" fill="#5a282d" stroke="#461e23" stroke-width="2"/>
+    ${tongue}${arrow(-1)}${arrow(1)}
+  </svg>`;
 }
 
-var CARDS = [
-  {deck:'vowel', say:'\uC544', glyph:'\u314F', m:[118,96,false], rom:'a',  ko:'입을 크게 벌려요',   en:'Open wide. Lips flat.',       word:'아 \u00B7 아이', gloss:'child'},
-  {deck:'vowel', say:'\uC774', glyph:'\u3163', m:[140,34,false], rom:'i',  ko:'입을 옆으로 펴요',   en:'Spread wide, like a smile.',  word:'이 \u00B7 이',   gloss:'tooth'},
-  {deck:'vowel', say:'\uC6B0', glyph:'\u315C', m:[64,58,true],   rom:'u',  ko:'입술을 모아 내밀어요', en:'Round and push forward.',    word:'우',            gloss:''},
-  {deck:'vowel', say:'\uC624', glyph:'\u3157', m:[92,78,true],   rom:'o',  ko:'ㅜ보다 조금 더 벌려요', en:'Like \u315C, a bit more open.', word:'오 \u00B7 오이', gloss:'cucumber'},
-  {deck:'vowel', say:'\uC73C', glyph:'\u3161', m:[140,26,false], rom:'eu', ko:'입술을 옆으로 펴요',  en:'Spread. NEVER round.', warn:true, word:'으',        gloss:''},
-  {deck:'greet', say:'안녕하세요',   glyph:'안녕하세요?',   rom:'an-nyeong-ha-se-yo',  mean:'Hello.',    when:'아침\u00B7점심\u00B7저녁 모두 / any time of day'},
-  {deck:'greet', say:'안녕히 가세요', glyph:'안녕히 가세요.', rom:'an-nyeong-hi ga-se-yo', mean:'Goodbye.',  when:'가는 사람에게 / to the person LEAVING'},
-  {deck:'greet', say:'안녕히 계세요', glyph:'안녕히 계세요.', rom:'an-nyeong-hi gye-se-yo', mean:'Goodbye.', when:'남는 사람에게 / to the person STAYING'},
-  {deck:'greet', say:'감사합니다',   glyph:'감사합니다.',   rom:'gam-sa-ham-ni-da',    mean:'Thank you.', when:'언제나 / always polite'}
+// ── 카드 데이터 ────────────────────────────────
+const CARDS = [
+  {deck:'vowel', say:'아', glyph:'ㅏ', m:[118,96,false], rom:'a',
+   ko:'입을 크게 벌려요', en:'Open wide. Lips flat.', word:'아  ·  아이', gloss:'child'},
+  {deck:'vowel', say:'이', glyph:'ㅣ', m:[140,34,false], rom:'i',
+   ko:'입을 옆으로 펴요', en:'Spread wide, like a smile.', word:'이  ·  이', gloss:'tooth'},
+  {deck:'vowel', say:'우', glyph:'ㅜ', m:[64,58,true], rom:'u',
+   ko:'입술을 모아 내밀어요', en:'Round and push forward.', word:'우', gloss:''},
+  {deck:'vowel', say:'오', glyph:'ㅗ', m:[92,78,true], rom:'o',
+   ko:'ㅜ보다 조금 더 벌려요', en:'Like ㅜ, a bit more open.', word:'오  ·  오이', gloss:'cucumber'},
+  {deck:'vowel', say:'으', glyph:'ㅡ', m:[140,26,false], rom:'eu',
+   ko:'입술을 옆으로 펴요', en:'Spread. NEVER round.', warn:true, word:'으', gloss:''},
+  {deck:'greet', say:'안녕하세요', glyph:'안녕하세요?', rom:'an-nyeong-ha-se-yo',
+   mean:'Hello.', when:'아침·점심·저녁 모두 / any time of day'},
+  {deck:'greet', say:'안녕히 가세요', glyph:'안녕히 가세요.', rom:'an-nyeong-hi ga-se-yo',
+   mean:'Goodbye.', when:'가는 사람에게 / to the person LEAVING'},
+  {deck:'greet', say:'안녕히 계세요', glyph:'안녕히 계세요.', rom:'an-nyeong-hi gye-se-yo',
+   mean:'Goodbye.', when:'남는 사람에게 / to the person STAYING'},
+  {deck:'greet', say:'감사합니다', glyph:'감사합니다.', rom:'gam-sa-ham-ni-da',
+   mean:'Thank you.', when:'언제나 / always polite'},
 ];
 
-var deck='all', queue=[], i=0, wrong=[], known=0;
-function $(id){ return document.getElementById(id); }
-var cardEl;
+// ── 상태 ────────────────────────────────
+let deck='all', queue=[], i=0, wrong=[], known=0;
+
+const $ = id => document.getElementById(id);
+const cardEl=$('card'), frontEl=$('front'), backEl=$('back');
 
 function build(){
-  queue=[];
-  for(var n=0;n<CARDS.length;n++){ if(deck==='all'||CARDS[n].deck===deck){ queue.push(CARDS[n]); } }
+  queue = CARDS.filter(c => deck==='all' || c.deck===deck).map((c,idx)=>({...c, id:idx}));
   i=0; wrong=[]; known=0;
-  $('result').className='done hide'; $('study').className='';
+  $('result').classList.add('hide'); $('study').classList.remove('hide');
   render();
 }
 function shuffle(){
-  for(var k=queue.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=queue[k]; queue[k]=queue[j]; queue[j]=t; }
+  for(let k=queue.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[queue[k],queue[j]]=[queue[j],queue[k]];}
   i=0; render();
 }
 function render(){
-  if(i>=queue.length){ finish(); return; }
-  var c=queue[i];
-  cardEl.className='card';
-  $('front').innerHTML='<div class="glyph '+(c.deck==='vowel'?'v':'g')+'">'+c.glyph+'</div>'
-    +'<div class="kind">'+(c.deck==='vowel'?'모음 vowel':'인사 greeting')+'</div>';
-  if(c.deck==='vowel'){
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'">&#128266;</button>'
-      + mouth(c.m[0],c.m[1],c.m[2])
-      + '<div class="rom">'+c.rom+'</div>'
-      + '<div class="tip-ko">'+c.ko+'</div>'
-      + '<div class="tip-en'+(c.warn?' warn':'')+'">'+c.en+'</div>'
-      + '<div class="word">'+c.word+(c.gloss?'<span>'+c.gloss+'</span>':'')+'</div>';
-  } else {
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'">&#128266;</button>'
-      + '<div class="rom">'+c.rom+'</div>'
-      + '<div class="mean">'+c.mean+'</div>'
-      + '<div class="when">'+c.when+'</div>';
-  }
-  $('count').innerHTML=(i+1)+' / '+queue.length;
-  $('fill').style.width=((i/queue.length)*100)+'%';
-  $('prev').disabled=(i===0);
+  if(i>=queue.length){ return finish(); }
+  const c=queue[i];
+  cardEl.classList.remove('flipped');
+  frontEl.innerHTML =
+    `<div class="glyph ${c.deck==='vowel'?'v':'g'}">${c.glyph}</div>
+     <div class="kind">${c.deck==='vowel'?'모음 vowel':'인사 greeting'}</div>`;
+  backEl.innerHTML = c.deck==='vowel'
+    ? `<button class="speak" data-say="${c.say}" title="듣기">🔊</button>
+       ${mouth(...c.m)}
+       <div class="rom">${c.rom}</div>
+       <div class="tip-ko">${c.ko}</div>
+       <div class="tip-en${c.warn?' warn':''}">${c.en}</div>
+       <div class="word">${c.word}${c.gloss?`<small>${c.gloss}</small>`:''}</div>`
+    : `<button class="speak" data-say="${c.say}" title="듣기">🔊</button>
+       <div class="rom">${c.rom}</div>
+       <div class="mean">${c.mean}</div>
+       <div class="when">${c.when}</div>`;
+  $('count').textContent = `${i+1} / ${queue.length}`;
+  $('fill').style.width = `${(i/queue.length)*100}%`;
+  $('prev').disabled = i===0;
 }
-function advance(ok){ if(ok){ known++; } else { wrong.push(queue[i]); } i++; render(); }
+function advance(ok){
+  if(ok) known++; else wrong.push(queue[i]);
+  i++; render();
+}
 function finish(){
-  $('study').className='hide'; $('result').className='done';
+  $('study').classList.add('hide');
+  $('result').classList.remove('hide');
   $('fill').style.width='100%';
-  $('count').innerHTML=queue.length+' / '+queue.length;
-  $('score').innerHTML=known+' / '+queue.length;
-  $('retryWrong').disabled=(wrong.length===0);
-  $('resultMsg').innerHTML = (wrong.length===0)
-    ? '전부 맞혔습니다. 잘했어요!  Perfect!'
-    : '다시 볼 카드 '+wrong.length+'장 \u00B7 '+wrong.length+' to review';
+  $('count').textContent = `${queue.length} / ${queue.length}`;
+  $('score').textContent = `${known} / ${queue.length}`;
+  $('retryWrong').disabled = wrong.length===0;
+  $('resultMsg').textContent = wrong.length===0
+    ? '전부 맞혔습니다. 잘했어요!  Perfect — well done!'
+    : `다시 볼 카드 ${wrong.length}장 · ${wrong.length} card(s) to review`;
 }
-function toggleCard(){
-  cardEl.className = (cardEl.className.indexOf('flipped')>-1) ? 'card' : 'card flipped';
-}
-var voicesReady=false;
-function speak(text){
+
+// ── 이벤트 ────────────────────────────────
+cardEl.addEventListener('click', e=>{
+  if(e.target.closest('.speak')) return;
+  cardEl.classList.toggle('flipped');
+});
+document.addEventListener('click', e=>{
+  const b=e.target.closest('.speak'); if(!b) return;
   try{
-    if(!window.speechSynthesis){ return; }
-    if(!voicesReady){ window.speechSynthesis.getVoices(); voicesReady=true; }
-    window.speechSynthesis.cancel();
-    var u=new SpeechSynthesisUtterance(text);
-    u.lang='ko-KR'; u.rate=0.8;
-    window.speechSynthesis.speak(u);
-  }catch(err){}
-}
-
-window.onload = function(){
-  cardEl=$('card');
-
-  cardEl.onclick=function(e){
-    var t=(e&&e.target)||null;
-    while(t&&t!==cardEl){
-      if(t.className==='speak'){ speak(t.getAttribute('data-say')); return; }
-      t=t.parentNode;
-    }
-    toggleCard();
-  };
-
-  $('know').onclick=function(){ advance(true); };
-  $('again').onclick=function(){ advance(false); };
-  $('next').onclick=function(){ if(i<queue.length){ i++; render(); } };
-  $('prev').onclick=function(){ if(i>0){ i--; render(); } };
-  $('shuffle').onclick=shuffle;
-  $('retryAll').onclick=build;
-  $('retryWrong').onclick=function(){
-    queue=wrong.slice(0); i=0; wrong=[]; known=0;
-    $('result').className='done hide'; $('study').className=''; render();
-  };
-
-  function pick(id,val){
-    return function(){
-      $('d-all').className='chip'; $('d-vowel').className='chip'; $('d-greet').className='chip';
-      $(id).className='chip on'; deck=val; build();
-    };
-  }
-  $('d-all').onclick=pick('d-all','all');
-  $('d-vowel').onclick=pick('d-vowel','vowel');
-  $('d-greet').onclick=pick('d-greet','greet');
-
-  document.onkeydown=function(e){
-    if($('study').className==='hide'){ return; }
-    var k=e.keyCode;
-    if(k===32){ if(e.preventDefault){ e.preventDefault(); } toggleCard(); }
-    if(k===39){ if(i<queue.length){ i++; render(); } }
-    if(k===37){ if(i>0){ i--; render(); } }
-  };
-
-  build();
+    const u=new SpeechSynthesisUtterance(b.dataset.say);
+    u.lang='ko-KR'; u.rate=.8; speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(_){}
+});
+$('know').onclick  = ()=>advance(true);
+$('again').onclick = ()=>advance(false);
+$('next').onclick  = ()=>{ i=Math.min(i+1,queue.length); render(); };
+$('prev').onclick  = ()=>{ if(i>0){i--; render();} };
+$('shuffle').onclick = shuffle;
+$('retryAll').onclick = build;
+$('retryWrong').onclick = ()=>{
+  queue=[...wrong]; i=0; wrong=[]; known=0;
+  $('result').classList.add('hide'); $('study').classList.remove('hide'); render();
 };
+document.querySelectorAll('.chip[data-deck]').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.chip[data-deck]').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    deck=btn.dataset.deck; build();
+  };
+});
+document.addEventListener('keydown', e=>{
+  if($('study').classList.contains('hide')) return;
+  if(e.code==='Space'){ e.preventDefault(); cardEl.classList.toggle('flipped'); }
+  if(e.key==='ArrowRight') $('next').click();
+  if(e.key==='ArrowLeft')  $('prev').click();
+  if(e.key==='1') $('again').click();
+  if(e.key==='2') $('know').click();
+});
+
+build();
 </script>
 </body>
 </html>
