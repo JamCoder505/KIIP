@@ -169,15 +169,15 @@ var LESSONS = [
 {n:1, date:'10/03', title:'모음과 인사', ready:true,
   cats:[{id:'all',label:'전체 All'},{id:'vowel',label:'모음 Vowels'},{id:'greet',label:'인사 Greetings'}],
   cards:[
-    {cat:'vowel', say:'아', glyph:'ㅏ', m:[118,96,false], rom:'a', ko:'입을 크게 벌려요', en:'Open wide. Lips flat.', warn:false, word:'아 · 아이', gloss:'child'},
-    {cat:'vowel', say:'이', glyph:'ㅣ', m:[140,34,false], rom:'i', ko:'입을 옆으로 펴요', en:'Spread wide, like a smile.', warn:false, word:'이 · 이', gloss:'tooth'},
-    {cat:'vowel', say:'우', glyph:'ㅜ', m:[64,58,true], rom:'u', ko:'입술을 모아 내밀어요', en:'Round and push forward.', warn:false, word:'우', gloss:''},
-    {cat:'vowel', say:'오', glyph:'ㅗ', m:[92,78,true], rom:'o', ko:'ㅜ보다 조금 더 벌려요', en:'Like ㅜ, a bit more open.', warn:false, word:'오 · 오이', gloss:'cucumber'},
-    {cat:'vowel', say:'으', glyph:'ㅡ', m:[140,26,false], rom:'eu', ko:'입술을 옆으로 펴요', en:'Spread. NEVER round.', warn:true, word:'으', gloss:''},
-    {cat:'greet', say:'안녕하세요', glyph:'안녕하세요?', rom:'an-nyeong-ha-se-yo', mean:'Hello.', when:'아침·점심·저녁 모두 / any time of day'},
-    {cat:'greet', say:'안녕히 가세요', glyph:'안녕히 가세요.', rom:'an-nyeong-hi ga-se-yo', mean:'Goodbye.', when:'가는 사람에게 / to the person LEAVING'},
-    {cat:'greet', say:'안녕히 계세요', glyph:'안녕히 계세요.', rom:'an-nyeong-hi gye-se-yo', mean:'Goodbye.', when:'남는 사람에게 / to the person STAYING'},
-    {cat:'greet', say:'감사합니다', glyph:'감사합니다.', rom:'gam-sa-ham-ni-da', mean:'Thank you.', when:'언제나 / always polite'}
+    {cat:'vowel', say:'아', au:'audio/L1-01.m4a', glyph:'ㅏ', m:[118,96,false], rom:'a', ko:'입을 크게 벌려요', en:'Open wide. Lips flat.', warn:false, word:'아 · 아이', gloss:'child'},
+    {cat:'vowel', say:'이', au:'audio/L1-02.m4a', glyph:'ㅣ', m:[140,34,false], rom:'i', ko:'입을 옆으로 펴요', en:'Spread wide, like a smile.', warn:false, word:'이 · 이', gloss:'tooth'},
+    {cat:'vowel', say:'우', au:'audio/L1-03.m4a', glyph:'ㅜ', m:[64,58,true], rom:'u', ko:'입술을 모아 내밀어요', en:'Round and push forward.', warn:false, word:'우', gloss:''},
+    {cat:'vowel', say:'오', au:'audio/L1-04.m4a', glyph:'ㅗ', m:[92,78,true], rom:'o', ko:'ㅜ보다 조금 더 벌려요', en:'Like ㅜ, a bit more open.', warn:false, word:'오 · 오이', gloss:'cucumber'},
+    {cat:'vowel', say:'으', au:'audio/L1-05.m4a', glyph:'ㅡ', m:[140,26,false], rom:'eu', ko:'입술을 옆으로 펴요', en:'Spread. NEVER round.', warn:true, word:'으', gloss:''},
+    {cat:'greet', say:'안녕하세요', au:'audio/L1-06.m4a', glyph:'안녕하세요?', rom:'an-nyeong-ha-se-yo', mean:'Hello.', when:'아침·점심·저녁 모두 / any time of day'},
+    {cat:'greet', say:'안녕히 가세요', au:'audio/L1-07.m4a', glyph:'안녕히 가세요.', rom:'an-nyeong-hi ga-se-yo', mean:'Goodbye.', when:'가는 사람에게 / to the person LEAVING'},
+    {cat:'greet', say:'안녕히 계세요', au:'audio/L1-08.m4a', glyph:'안녕히 계세요.', rom:'an-nyeong-hi gye-se-yo', mean:'Goodbye.', when:'남는 사람에게 / to the person STAYING'},
+    {cat:'greet', say:'감사합니다', au:'audio/L1-09.m4a', glyph:'감사합니다.', rom:'gam-sa-ham-ni-da', mean:'Thank you.', when:'언제나 / always polite'}
   ]},
 {n:2, date:'10/10', title:'자음 ㄴ ㅁ ㄹ', ready:false, cats:[], cards:[]},
 {n:3, date:'10/17', title:'ㅓ와 반모음', ready:false, cats:[], cards:[]},
@@ -275,13 +275,13 @@ function render(){
   $('front').innerHTML='<div class="glyph '+(c.cat==='vowel'?'v':'g2')+'">'+c.glyph+'</div>'
     +'<div class="kind">'+(c.cat==='vowel'?'모음 vowel':'인사 greeting')+'</div>';
   if(c.cat==='vowel'){
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'">&#128266;</button>'
+    $('back').innerHTML='<button class="speak" data-say="'+c.say+'" data-au="'+(c.au||'')+'">&#128266;</button>'
       + mouth(c.m[0],c.m[1],c.m[2])
       + '<div class="rom">'+c.rom+'</div><div class="tip-ko">'+c.ko+'</div>'
       + '<div class="tip-en'+(c.warn?' warn':'')+'">'+c.en+'</div>'
       + '<div class="word">'+c.word+(c.gloss?'<span>'+c.gloss+'</span>':'')+'</div>';
   } else {
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'">&#128266;</button>'
+    $('back').innerHTML='<button class="speak" data-say="'+c.say+'" data-au="'+(c.au||'')+'">&#128266;</button>'
       + '<div class="rom">'+c.rom+'</div><div class="mean">'+c.mean+'</div>'
       + '<div class="when">'+c.when+'</div>';
   }
@@ -303,6 +303,15 @@ function finish(){
 function toggleCard(){
   cardEl.className=(cardEl.className.indexOf('flipped')>-1)?'card':'card flipped';
 }
+function play(file, text){
+  if(!file){ speak(text); return; }
+  try{
+    var a=new Audio(file);
+    a.onerror=function(){ speak(text); };
+    var p=a.play();
+    if(p && p['catch']){ p['catch'](function(){ speak(text); }); }
+  }catch(e){ speak(text); }
+}
 var voicesReady=false;
 function speak(t){
   try{
@@ -319,7 +328,7 @@ window.onload=function(){
   cardEl.onclick=function(e){
     var t=(e&&e.target)||null;
     while(t&&t!==cardEl){
-      if(t.className==='speak'){ speak(t.getAttribute('data-say')); return; }
+      if(t.className==='speak'){ play(t.getAttribute('data-au'), t.getAttribute('data-say')); return; }
       t=t.parentNode;
     }
     toggleCard();
