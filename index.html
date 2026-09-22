@@ -40,7 +40,7 @@
   .fill{height:5px; width:0; background:#1F3864}
 
   .scene{-webkit-perspective:1200px; perspective:1200px}
-  .card{position:relative; width:100%; height:280px; cursor:pointer;
+  .card{position:relative; width:100%; height:360px; cursor:pointer;
     -webkit-transform-style:preserve-3d; transform-style:preserve-3d;
     -webkit-transition:-webkit-transform .5s cubic-bezier(.2,.7,.3,1);
     transition:transform .5s cubic-bezier(.2,.7,.3,1)}
@@ -59,18 +59,23 @@
   .glyph{font-weight:700; color:#1F3864; line-height:1.05}
   .glyph.v{font-size:120px}
   .glyph.g2{font-size:34px; line-height:1.3}
+  .glyph.t{font-size:64px; letter-spacing:.04em}
   .kind{margin-top:10px; font-size:11px; color:#b3bbc8}
-  .rom{font-size:32px; font-weight:700; color:#C0504D; margin:6px 0 4px}
-  .tip-ko{font-size:17px; margin:2px 0}
-  .tip-en{font-size:13px; color:#7b8494; font-style:italic; margin:2px 0 8px}
+  /* 뒷면 글자 크기(양식 고정) — em 단위. 기준은 .face.back 16px, 넘치면 fitBack()이 기준을 줄인다 */
+  .face.back{font-size:16px}
+  .rom{font-size:2.6em; font-weight:700; color:#C0504D; margin:.15em 0 .1em; line-height:1.15; word-break:keep-all}
+  .back .item .rom{font-size:2.1em}
+  .tip-ko{font-size:1.45em; font-weight:700; margin:.1em 0; line-height:1.3; word-break:keep-all}
+  .tip-en{font-size:1.15em; color:#7b8494; font-style:italic; margin:.15em 0 .45em; line-height:1.3}
   .tip-en.warn{color:#C0504D}
-  .word{font-size:20px; font-weight:700; color:#1F3864}
-  .word span{font-weight:400; color:#7b8494; font-size:14px; margin-left:6px}
-  .mean{font-size:24px; margin:2px 0 6px}
-  .when{font-size:13px; color:#666}
-  svg.mouth{width:92px; height:69px; display:block; margin:0 auto 4px}
+  .word{font-size:1.6em; font-weight:700; color:#1F3864}
+  .word span{font-weight:400; color:#7b8494; font-size:.7em; margin-left:6px}
+  .mean{font-size:2em; font-weight:700; margin:.1em 0 .3em; line-height:1.2}
+  .when{font-size:1.1em; color:#555; line-height:1.4; word-break:keep-all}
+  .when.warn{color:#C0504D}
+  svg.mouth{width:7.5em; height:5.6em; display:block; margin:0 auto .2em}
   .speak{position:absolute; top:8px; right:10px; border:0; background:transparent;
-    font-size:20px; padding:6px; cursor:pointer; opacity:.55; line-height:1}
+    font-size:26px; padding:6px; cursor:pointer; opacity:.55; line-height:1}
   .hint{text-align:center; font-size:11.5px; color:#7b8494; margin:8px 0 6px}
 
   .btn{display:block; width:100%; padding:14px 6px; border:1px solid #dfe4ec;
@@ -99,7 +104,9 @@
     padding:14px; margin-bottom:10px; text-align:center}
   .fcard .glyph.v{font-size:78px}
   .fcard .glyph.g{font-size:28px; font-weight:700; color:#1F3864}
+  .fcard .glyph.t{font-size:48px}
   .fsplit{border-top:1px dashed #dfe4ec; margin-top:10px; padding-top:10px}
+  .fbtn{display:inline-block;margin-top:6px;padding:10px 14px;background:#1F3864;color:#fff;border-radius:10px;text-decoration:none;font-size:14px}
   .fgroup{font-size:13px; color:#7b8494; margin:16px 0 8px; font-weight:700}
 </style>
 </head>
@@ -147,57 +154,20 @@
       <h2>아직 열리지 않았습니다</h2>
       <p>Not open yet</p>
       <div class="score" id="lockDate">--</div>
-      <p>이 날 수업이 끝나면 카드가 열립니다.<br>Cards open after class on this date.</p>
+      <p id="lockMsg">이 날 수업이 끝나면 카드가 열립니다.<br>Cards open after class on this date.</p>
     </div>
   </div>
 
 <div id="fallback">
-<div class="notice"><b>이 화면은 간단 보기입니다.</b><br>뒤집기·자기점검 기능을 쓰려면 <b>브라우저</b>에서 열어 주세요.<br><span class="g">This is the simple view. Open this page in a browser for the interactive version.</span></div>
-<div class="fgroup">1과 · 모음 Vowels</div>
-<div class="fcard"><div class="glyph v">ㅏ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="74" ry="63" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="59" ry="48" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="102" rx="39" ry="16" fill="#b96e6e"/><line x1="20" y1="75" x2="2" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="2,75 12,68 12,82" fill="#1F3864"/><line x1="180" y1="75" x2="198" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="198,75 188,68 188,82" fill="#1F3864"/></svg><div class="rom">a</div><div class="tip-ko">입을 크게 벌려요</div><div class="tip-en">Open wide. Lips flat.</div><div class="word">아 · 아이 <span>child</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅣ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="32" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="17" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">i</div><div class="tip-ko">입을 옆으로 펴요</div><div class="tip-en">Spread wide, like a smile.</div><div class="word">이 · 이 <span>tooth</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅜ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91" rx="21" ry="10" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">u</div><div class="tip-ko">입술을 모아 내밀어요</div><div class="tip-en">Round and push forward.</div><div class="word">우 </div></div></div>
-<div class="fcard"><div class="glyph v">ㅗ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="97" rx="31" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">o</div><div class="tip-ko">ㅜ보다 조금 더 벌려요</div><div class="tip-en">Like ㅜ, a bit more open.</div><div class="word">오 · 오이 <span>cucumber</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅡ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="28" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="13" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">eu</div><div class="tip-ko">입술을 옆으로 펴요</div><div class="tip-en warn">Spread. NEVER round.</div><div class="word">으 </div></div></div>
-<div class="fgroup">1과 · 인사 Greetings</div>
-<div class="fcard"><div class="glyph g">안녕하세요?</div><div class="fsplit"><div class="rom">an-nyeong-ha-se-yo</div><div class="mean">Hello.</div><div class="when">아침·점심·저녁 모두 / any time of day</div></div></div>
-<div class="fcard"><div class="glyph g">안녕히 가세요.</div><div class="fsplit"><div class="rom">an-nyeong-hi ga-se-yo</div><div class="mean">Goodbye.</div><div class="when">가는 사람에게 / to the person LEAVING</div></div></div>
-<div class="fcard"><div class="glyph g">안녕히 계세요.</div><div class="fsplit"><div class="rom">an-nyeong-hi gye-se-yo</div><div class="mean">Goodbye.</div><div class="when">남는 사람에게 / to the person STAYING</div></div></div>
-<div class="fcard"><div class="glyph g">감사합니다.</div><div class="fsplit"><div class="rom">gam-sa-ham-ni-da</div><div class="mean">Thank you.</div><div class="when">언제나 / always polite</div></div></div>
+<div class="notice"><b>이 화면은 버튼이 움직이지 않는 화면입니다.</b><br>카드를 모두 보려면 아래 <b>간단 보기</b>를 누르세요. 뒤집기·듣기를 쓰려면 <b>브라우저(Chrome·Safari)</b>에서 이 주소를 여세요.<br><span class="g">This view cannot run buttons. Tap "Simple view" to see all cards, or open this address in a browser (Chrome, Safari).</span><br><a class="fbtn" href="simple.html">간단 보기 · Simple view</a></div>
 </div>
 
 </div>
-
+<script src="lessons.js"></script>
 <script>
-var LESSONS = [
-{n:1, date:'10/03', title:'모음과 인사', ready:true,
-  cats:[{id:'all',label:'전체 All'},{id:'vowel',label:'모음 Vowels'},{id:'greet',label:'인사 Greetings'}],
-  cards:[
-    {cat:'vowel', say:'아', au:'audio/L1-01.m4a', glyph:'ㅏ', m:[118,96,false], rom:'a', ko:'입을 크게 벌려요', en:'Open wide. Lips flat.', warn:false, word:'아 · 아이', gloss:'child'},
-    {cat:'vowel', say:'이', au:'audio/L1-02.m4a', glyph:'ㅣ', m:[140,34,false], rom:'i', ko:'입을 옆으로 펴요', en:'Spread wide, like a smile.', warn:false, word:'이 · 이', gloss:'tooth'},
-    {cat:'vowel', say:'우', au:'audio/L1-03.m4a', glyph:'ㅜ', m:[64,58,true], rom:'u', ko:'입술을 모아 내밀어요', en:'Round and push forward.', warn:false, word:'우', gloss:''},
-    {cat:'vowel', say:'오', au:'audio/L1-04.m4a', glyph:'ㅗ', m:[92,78,true], rom:'o', ko:'ㅜ보다 조금 더 벌려요', en:'Like ㅜ, a bit more open.', warn:false, word:'오 · 오이', gloss:'cucumber'},
-    {cat:'vowel', say:'으', au:'audio/L1-05.m4a', glyph:'ㅡ', m:[140,26,false], rom:'eu', ko:'입술을 옆으로 펴요', en:'Spread. NEVER round.', warn:true, word:'으', gloss:''},
-    {cat:'greet', say:'안녕하세요', au:'audio/L1-06.m4a', glyph:'안녕하세요?', rom:'an-nyeong-ha-se-yo', mean:'Hello.', when:'아침·점심·저녁 모두 / any time of day'},
-    {cat:'greet', say:'안녕히 가세요', au:'audio/L1-07.m4a', glyph:'안녕히 가세요.', rom:'an-nyeong-hi ga-se-yo', mean:'Goodbye.', when:'가는 사람에게 / to the person LEAVING'},
-    {cat:'greet', say:'안녕히 계세요', au:'audio/L1-08.m4a', glyph:'안녕히 계세요.', rom:'an-nyeong-hi gye-se-yo', mean:'Goodbye.', when:'남는 사람에게 / to the person STAYING'},
-    {cat:'greet', say:'감사합니다', au:'audio/L1-09.m4a', glyph:'감사합니다.', rom:'gam-sa-ham-ni-da', mean:'Thank you.', when:'언제나 / always polite'}
-  ]},
-{n:2, date:'10/10', title:'자음 ㄴ ㅁ ㄹ', ready:false, cats:[], cards:[]},
-{n:3, date:'10/17', title:'ㅓ와 반모음', ready:false, cats:[], cards:[]},
-{n:4, date:'10/31', title:'평음 ㅂㄷㄱㅅㅈ', ready:false, cats:[], cards:[]},
-{n:5, date:'11/14', title:'격음 ㅍㅌㅋㅊㅎ', ready:false, cats:[], cards:[]},
-{n:6, date:'11/21', title:'경음 ㅃㄸㄲㅆㅉ', ready:false, cats:[], cards:[]},
-{n:7, date:'11/28', title:'3중 대립', ready:false, cats:[], cards:[]},
-{n:8, date:'12/05', title:'받침 1', ready:false, cats:[], cards:[]},
-{n:9, date:'12/12', title:'받침 2', ready:false, cats:[], cards:[]},
-{n:10, date:'12/19', title:'연음', ready:false, cats:[], cards:[]},
-{n:11, date:'01/09', title:'받침·연음 낭독', ready:false, cats:[], cards:[]},
-{n:12, date:'01/16', title:'ㅐ ㅔ ㅚ ㅟ', ready:false, cats:[], cards:[]},
-{n:13, date:'01/23', title:'종합 낭독', ready:false, cats:[], cards:[]},
-{n:14, date:'01/30', title:'1기 진단', ready:false, cats:[], cards:[]}
-];
-
+/* index.html — 화면 고정 파일. 과가 늘어도 고치지 않는다. 카드 데이터는 lessons.js(생성기 자동 생성).
+ * 카드 필드: type:'letter' → m(입 모양, 선택)·rom·ko·en·warn·word·gloss / type:'item' → rom·mean·when(·warn)
+ * 공통: cat·kind·sz('v' 큰 글자 | 'g2' 단어·표현 | 't' 세 글자)·say(TTS)·au(녹음 파일)·glyph */
 function mouth(ow, oh, rounded){
   var cx=100, cy=75;
   var lw=ow+(rounded?44:30), lh=oh+(rounded?44:30);
@@ -214,6 +184,8 @@ function mouth(ow, oh, rounded){
     + '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(ow/2)+'" ry="'+(oh/2)+'" fill="#5a282d" stroke="#461e23" stroke-width="2"/>'
     + tongue + arrow(-1) + arrow(1) + '</svg>';
 }
+function nbh(s){ return esc(s).replace(/-/g,'&#8209;'); }  /* 로마자는 하이픈에서 줄바꿈하지 않음 */
+function esc(s){ return String(s===undefined||s===null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 var L=0, cat='all', queue=[], i=0, wrong=[], known=0;
 function $(id){ return document.getElementById(id); }
@@ -223,32 +195,30 @@ function lessonChips(){
   var h='';
   for(var n=0;n<LESSONS.length;n++){
     var s=LESSONS[n];
-    h += '<button class="lchip'+(s.ready?'':' lock')+'" data-idx="'+n+'"><b>'+s.n+'과</b><span>'+s.date+'</span></button>';
+    h += '<button class="lchip'+(s.ready?'':' lock')+'" data-idx="'+n+'"><b>'+s.n+'과</b><span>'+(s.date?esc(s.date):'&nbsp;')+'</span></button>';
   }
   $('lessons').innerHTML=h;
   var bs=$('lessons').getElementsByTagName('button');
   for(var k=0;k<bs.length;k++){ bs[k].onclick=chooseLesson; }
 }
-function chooseLesson(){
-  L=parseInt(this.getAttribute('data-idx'),10);
+function markChips(){
   var bs=$('lessons').getElementsByTagName('button');
-  for(var k=0;k<bs.length;k++){
-    bs[k].className='lchip'+(LESSONS[k].ready?'':' lock')+(k===L?' on':'');
-  }
-  showLesson();
+  for(var k=0;k<bs.length;k++){ bs[k].className='lchip'+(LESSONS[k].ready?'':' lock')+(k===L?' on':''); }
 }
+function chooseLesson(){ L=parseInt(this.getAttribute('data-idx'),10); markChips(); showLesson(); }
 function showLesson(){
   var s=LESSONS[L];
-  $('ltitle').innerHTML=s.n+'과 · '+s.title;
+  $('ltitle').innerHTML=s.n+'과 · '+esc(s.title)+(s.en?' <span class="g">· '+esc(s.en)+'</span>':'');
   if(!s.ready){
     $('open').className='hide'; $('locked').className='locked';
-    $('lockDate').innerHTML=s.date;
+    $('lockDate').innerHTML=s.date?esc(s.date):'준비 중';
+    $('lockMsg').innerHTML=s.date?'이 날 수업이 끝나면 카드가 열립니다.<br>Cards open after class on this date.':'아직 카드를 만들고 있습니다.<br>Coming soon.';
     return;
   }
   $('locked').className='locked hide'; $('open').className='';
   var h='';
   for(var c=0;c<s.cats.length;c++){
-    h += '<button class="chip'+(c===0?' on':'')+'" data-cat="'+s.cats[c].id+'">'+s.cats[c].label+'</button>';
+    h += '<button class="chip'+(c===0?' on':'')+'" data-cat="'+esc(s.cats[c].id)+'">'+esc(s.cats[c].label)+'</button>';
   }
   $('cats').innerHTML=h;
   var bs=$('cats').getElementsByTagName('button');
@@ -276,22 +246,30 @@ function render(){
   if(i>=queue.length){ finish(); return; }
   var c=queue[i];
   cardEl.className='card';
-  $('front').innerHTML='<div class="glyph '+(c.cat==='vowel'?'v':'g2')+'">'+c.glyph+'</div>'
-    +'<div class="kind">'+(c.cat==='vowel'?'모음 vowel':'인사 greeting')+'</div>';
-  if(c.cat==='vowel'){
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'" data-au="'+(c.au||'')+'">&#128266;</button>'
-      + mouth(c.m[0],c.m[1],c.m[2])
-      + '<div class="rom">'+c.rom+'</div><div class="tip-ko">'+c.ko+'</div>'
-      + '<div class="tip-en'+(c.warn?' warn':'')+'">'+c.en+'</div>'
-      + '<div class="word">'+c.word+(c.gloss?'<span>'+c.gloss+'</span>':'')+'</div>';
+  $('front').innerHTML='<div class="glyph '+(c.sz||'g2')+'">'+esc(c.glyph)+'</div>'
+    +'<div class="kind">'+esc(c.kind)+'</div>';
+  var sp='<button class="speak" data-say="'+esc(c.say)+'" data-au="'+esc(c.au)+'">&#128266;</button>';
+  if(c.type==='letter'){
+    $('back').innerHTML=sp
+      + (c.m ? mouth(c.m[0],c.m[1],c.m[2]) : '')
+      + '<div class="rom">'+nbh(c.rom)+'</div><div class="tip-ko">'+esc(c.ko)+'</div>'
+      + '<div class="tip-en'+(c.warn?' warn':'')+'">'+esc(c.en)+'</div>'
+      + (c.word ? '<div class="word">'+esc(c.word)+(c.gloss?'<span>'+esc(c.gloss)+'</span>':'')+'</div>' : '');
   } else {
-    $('back').innerHTML='<button class="speak" data-say="'+c.say+'" data-au="'+(c.au||'')+'">&#128266;</button>'
-      + '<div class="rom">'+c.rom+'</div><div class="mean">'+c.mean+'</div>'
-      + '<div class="when">'+c.when+'</div>';
+    $('back').innerHTML=sp
+      + '<div class="item"><div class="rom">'+nbh(c.rom)+'</div><div class="mean">'+esc(c.mean)+'</div>'
+      + '<div class="when'+(c.warn?' warn':'')+'">'+esc(c.when)+'</div></div>';
   }
+  fitBack();
   $('count').innerHTML=(i+1)+' / '+queue.length;
   $('fill').style.width=((i/queue.length)*100)+'%';
   $('prev').disabled=(i===0);
+}
+/* 뒷면이 카드보다 길면 글자 기준 크기를 한 단계씩 줄인다(최소 11px) */
+function fitBack(){
+  var b=$('back'), px=16;
+  b.style.fontSize=px+'px';
+  while(px>11 && (b.scrollHeight>b.clientHeight+1 || b.scrollWidth>b.clientWidth+1)){ px--; b.style.fontSize=px+'px'; }
 }
 function advance(ok){ if(ok){known++;}else{wrong.push(queue[i]);} i++; render(); }
 function finish(){
@@ -328,6 +306,10 @@ function speak(t){
 }
 
 window.onload=function(){
+  if(typeof LESSONS==='undefined' || !LESSONS.length){
+    $('app').innerHTML='<div class="notice"><b>카드 자료(lessons.js)를 불러오지 못했습니다.</b><br>잠시 뒤 다시 열어 주세요. <span class="g">Could not load the cards. Try again later.</span><br><a class="fbtn" href="simple.html">간단 보기 · Simple view</a></div>';
+    return;
+  }
   cardEl=$('card');
   cardEl.onclick=function(e){
     var t=(e&&e.target)||null;
@@ -355,9 +337,9 @@ window.onload=function(){
     if(k===37){ if(i>0){ i--; render(); } }
   };
   lessonChips();
-  var bs=$('lessons').getElementsByTagName('button');
-  bs[0].className='lchip on';
-  L=0; showLesson();
+  /* 처음 열 때: 열린 과 중 마지막 과를 보여 준다 */
+  L=0; for(var k=0;k<LESSONS.length;k++){ if(LESSONS[k].ready){ L=k; } }
+  markChips(); showLesson();
 };
 </script>
 </body>
