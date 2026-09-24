@@ -25,13 +25,17 @@
   .pick:after{content:""; position:absolute; right:18px; top:18px; width:9px; height:9px;
     border-right:3px solid #1F3864; border-bottom:3px solid #1F3864;
     -webkit-transform:rotate(45deg); transform:rotate(45deg); pointer-events:none}
-  .ltitle{font-size:12.5px; color:#7b8494; margin:0 2px 12px; min-height:16px}
+  .ltitle{font-size:12.5px; color:#7b8494; margin:0 2px 12px; height:17px; line-height:17px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 
-  .chip{display:inline-block; border:1px solid #dfe4ec; background:#fff; color:#22262e;
-    padding:8px 14px; border-radius:20px; font-size:13px; font-family:inherit;
-    margin:0 5px 5px 0; cursor:pointer}
-  .chip.on{background:#1F3864; color:#fff; border-color:#1F3864}
-  .cats{margin-bottom:6px}
+  /* 분류 선택: 콤보 상자(늘 한 줄 — 과를 바꿔도 카드 위치가 움직이지 않음) + 섞기 */
+  .crow{display:-webkit-box; display:-webkit-flex; display:flex; margin-bottom:10px;
+    -webkit-box-align:center; -webkit-align-items:center; align-items:center}
+  .crow .pick{-webkit-box-flex:1; -webkit-flex:1; flex:1; min-width:0; margin:0 8px 0 0}
+  .pick.sm select{height:44px; border-width:1px; border-color:#9aa3b1; color:#22262e;
+    font-size:16px; font-weight:400; border-radius:10px; padding-right:38px}
+  .pick.sm:after{top:14px; right:15px; width:8px; height:8px; border-color:#555; border-width:0 2px 2px 0}
+  .crow .shuf{height:44px; border-radius:10px; padding:0 12px; font-size:13px}
 
   .meter{font-size:13px; color:#7b8494; margin-bottom:8px}
   .mrow{display:-webkit-box; display:-webkit-flex; display:flex;
@@ -61,7 +65,8 @@
 
   .glyph{font-weight:700; color:#1F3864; line-height:1.05}
   .glyph.v{font-size:120px}
-  .glyph.g2{font-size:34px; line-height:1.3}
+  .glyph.g2{font-size:64px; line-height:1.25}
+  .glyph.g2,.glyph.t{word-break:keep-all; max-width:100%}  /* 단어·표현·문장: fitFront()가 64px에서 카드에 맞게 줄임 */
   .glyph.t{font-size:64px; letter-spacing:.04em}
   .kind{margin-top:10px; font-size:11px; color:#b3bbc8}
   /* 뒷면 글자 크기(양식 고정) — em 단위. 기준은 .face.back 16px, 넘치면 fitBack()이 기준을 줄인다 */
@@ -73,12 +78,24 @@
   .tip-en.warn{color:#C0504D}
   .word{font-size:1.6em; font-weight:700; color:#1F3864}
   .word span{font-weight:400; color:#7b8494; font-size:.7em; margin-left:6px}
+  .word b.hl{color:#C0504D}  /* 이 카드의 글자가 든 음절 = 로마자와 같은 색 */
   .mean{font-size:2em; font-weight:700; margin:.1em 0 .3em; line-height:1.2}
   .when{font-size:1.1em; color:#555; line-height:1.4; word-break:keep-all}
   .when.warn{color:#C0504D}
   svg.mouth{width:7.5em; height:5.6em; display:block; margin:0 auto .2em}
   .speak{position:absolute; top:8px; right:8px; border:1px solid #dfe4ec; background:#eef1f6;
     width:46px; height:46px; border-radius:50%; font-size:22px; padding:0; cursor:pointer; line-height:44px}
+  /* 체크 상자(카드 안 왼쪽 위, 🔊 반대쪽): 아는 카드만 체크. 글자 크기 px 고정 */
+  .ok{position:absolute; top:8px; left:8px; height:46px; padding:0 12px 0 8px; border:1px solid #dfe4ec;
+    border-radius:12px; background:#fff; color:#555; font-size:14px; font-weight:700; font-family:inherit;
+    cursor:pointer; line-height:44px; -webkit-appearance:none; appearance:none}
+  .ok .box{display:inline-block; width:24px; height:24px; margin-right:7px; vertical-align:-6px;
+    border:2px solid #9aa3b1; border-radius:5px; background:#fff; color:#fff; font-size:17px; line-height:20px; text-align:center}
+  .ok.on{border-color:#2f6b2a; color:#2f6b2a; background:#eef6ec}
+  .ok.on .box{border-color:#2f6b2a; background:#2f6b2a}
+  .okmark{position:absolute; top:12px; left:14px; width:26px; height:26px; border-radius:6px;
+    background:#2f6b2a; color:#fff; font-size:18px; line-height:26px; font-weight:700}
+  .ok-n{color:#2f6b2a; font-weight:700; margin-left:8px}
   .hint{text-align:center; font-size:11.5px; color:#7b8494; margin:8px 0 6px}
 
   .btn{display:block; width:100%; padding:16px 6px; border:1px solid #dfe4ec;
@@ -113,6 +130,8 @@
   .fgroup{font-size:13px; color:#7b8494; margin:16px 0 8px; font-weight:700}
   /* 간단 보기(스크립트 없는 화면) */
   .nojs .pick,.nojs .ltitle{display:none}
+  #fallback .glyph.g2{font-size:40px;word-break:keep-all}
+  #fallback .word b.hl{color:#C0504D}
 #fallback body{margin:0;padding:14px;background:#eef1f6;color:#22262e;font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif}
 #fallback .wrap{max-width:520px;margin:0 auto}#fallback h1{margin:0;font-size:19px;color:#1F3864}#fallback .sub{margin:3px 0 12px;font-size:12px;color:#7b8494;font-style:italic}
 #fallback .toc a{display:inline-block;margin:0 6px 6px 0;padding:6px 10px;background:#fff;border:1px solid #dfe4ec;border-radius:10px;font-size:13px;color:#1F3864;text-decoration:none}
@@ -136,8 +155,8 @@
 
   <div id="app">
     <div id="open">
-      <div class="cats" id="cats"></div>
-      <div class="meter"><div class="mrow"><span id="count">0 / 0</span><button class="shuf" id="shuffle">섞기 Shuffle</button></div><div class="track"><div class="fill" id="fill"></div></div></div>
+      <div class="crow"><div class="pick sm"><select id="cats" aria-label="분류 선택 · Choose a group"></select></div><button class="shuf" id="shuffle">섞기 Shuffle</button></div>
+      <div class="meter"><div class="mrow"><span id="count">0 / 0</span></div><div class="track"><div class="fill" id="fill"></div></div></div>
       <div id="study">
         <div class="scene">
           <div class="card" id="card">
@@ -147,9 +166,8 @@
         </div>
         <div class="hint">카드를 누르면 뒤집힙니다 &middot; Tap to flip</div>
         <table class="cols"><tr>
-          <td class="narrow"><button class="btn" id="prev" aria-label="앞 카드 · Back">&#8592;</button></td>
-          <td><button class="btn again" id="again">다시 Again</button></td>
-          <td><button class="btn good" id="know">알아요 Got it</button></td>
+          <td><button class="btn" id="prev">&#8592; 앞 Back</button></td>
+          <td><button class="btn" id="next">다음 Next &#8594;</button></td>
         </tr></table>
       </div>
       <div id="result" class="done hide">
@@ -158,8 +176,8 @@
         <div class="score" id="score">0 / 0</div>
         <p id="resultMsg"></p>
         <table class="cols" style="margin-top:14px"><tr>
-          <td><button class="btn again" id="retryWrong">틀린 것만</button></td>
-          <td><button class="btn" id="retryAll">처음부터</button></td>
+          <td><button class="btn again" id="retryWrong">다시 볼 카드만 Review</button></td>
+          <td><button class="btn" id="retryAll">처음부터 Restart</button></td>
         </tr></table>
       </div>
     </div>
@@ -177,11 +195,11 @@
 <div class="toc"><a href="#L1">1과</a><a href="#L2">2과</a><a href="#L3">3과</a><a href="#L4">4과</a><a href="#L5">5과</a><a href="#L6">6과</a><a href="#L7">7과</a><a href="#L8">8과</a><a href="#L9">9과</a><a href="#L10">10과</a><a href="#L11">11과</a><a href="#L12">12과</a><a href="#L13">13과</a><a href="#L14">14과</a></div>
 <div id="L1"></div>
 <div class="fgroup">1과 · 모음 Vowels</div>
-<div class="fcard"><div class="glyph v">ㅏ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="74" ry="63" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="59" ry="48" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="101.88" rx="39.333333333333336" ry="16" fill="#b96e6e"/><line x1="20" y1="75" x2="2" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="2,75 12,68 12,82" fill="#1F3864"/><line x1="180" y1="75" x2="198" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="198,75 188,68 188,82" fill="#1F3864"/></svg><div class="rom">a</div><div class="tip-ko">입을 크게 벌려요.</div><div class="tip-en">Open wide. Lips flat.</div><div class="word">아이<span>child</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅣ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="32" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="17" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">i</div><div class="tip-ko">입을 옆으로 펴요.</div><div class="tip-en">Spread wide, like a smile.</div><div class="word">이<span>tooth</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅜ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">u</div><div class="tip-ko">입술을 동그랗게 모아 내밀어요.</div><div class="tip-en">ROUND lips. Push forward.</div><div class="word">우</div></div></div>
-<div class="fcard"><div class="glyph v">ㅗ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">o</div><div class="tip-ko">입술을 동그랗게, ㅜ보다 조금 더 벌려요.</div><div class="tip-en">Round, a bit more open than ㅜ.</div><div class="word">오 · 오이<span>five · cucumber</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅡ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="28" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="13" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">eu</div><div class="tip-ko">입술을 옆으로 펴요. 둥글게 하지 마세요.</div><div class="tip-en warn">FLAT lips. NEVER round.</div><div class="word">으</div></div></div>
+<div class="fcard"><div class="glyph v">ㅏ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="74" ry="63" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="59" ry="48" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="101.88" rx="39.333333333333336" ry="16" fill="#b96e6e"/><line x1="20" y1="75" x2="2" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="2,75 12,68 12,82" fill="#1F3864"/><line x1="180" y1="75" x2="198" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="198,75 188,68 188,82" fill="#1F3864"/></svg><div class="rom">a</div><div class="tip-ko">입을 크게 벌려요.</div><div class="tip-en">Open wide. Lips flat.</div><div class="word"><b class="hl">아</b>이<span>child</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅣ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="32" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="17" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">i</div><div class="tip-ko">입을 옆으로 펴요.</div><div class="tip-en">Spread wide, like a smile.</div><div class="word"><b class="hl">이</b><span>tooth</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅜ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">u</div><div class="tip-ko">입술을 동그랗게 모아 내밀어요.</div><div class="tip-en">ROUND lips. Push forward.</div><div class="word"><b class="hl">우</b></div></div></div>
+<div class="fcard"><div class="glyph v">ㅗ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">o</div><div class="tip-ko">입술을 동그랗게, ㅜ보다 조금 더 벌려요.</div><div class="tip-en">Round, a bit more open than ㅜ.</div><div class="word"><b class="hl">오</b> · <b class="hl">오</b>이<span>five · cucumber</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅡ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="28" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="13" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">eu</div><div class="tip-ko">입술을 옆으로 펴요. 둥글게 하지 마세요.</div><div class="tip-en warn">FLAT lips. NEVER round.</div><div class="word"><b class="hl">으</b></div></div></div>
 <div class="fgroup">1과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">아이</div><div class="fsplit"><div class="rom">a&#8209;i</div><div class="mean">child</div><div class="when">1과 · Lesson 1</div></div></div>
 <div class="fcard"><div class="glyph g2">오이</div><div class="fsplit"><div class="rom">o&#8209;i</div><div class="mean">cucumber</div><div class="when">1과 · Lesson 1</div></div></div>
@@ -194,9 +212,9 @@
 <div class="fcard"><div class="glyph g2">감사합니다.</div><div class="fsplit"><div class="rom">gam&#8209;sa&#8209;ham&#8209;ni&#8209;da</div><div class="mean">Thank you.</div><div class="when">언제나 공손하게 · 통째로 / always polite · as a whole</div></div></div>
 <div id="L2"></div>
 <div class="fgroup">2과 · 자음 Consonants</div>
-<div class="fcard"><div class="glyph v">ㄴ</div><div class="fsplit"><div class="rom">n</div><div class="tip-ko">혀끝을 윗잇몸에 대고 코로 소리 내요.</div><div class="tip-en">Tongue tip on the gum ridge. Sound through the nose.</div><div class="word">나라 · 누나<span>country · older sister</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅁ</div><div class="fsplit"><div class="rom">m</div><div class="tip-ko">입술을 닫았다가 코로 소리 내요.</div><div class="tip-en">Close your lips. Hum through the nose.</div><div class="word">나무 · 이마<span>tree · forehead</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄹ</div><div class="fsplit"><div class="rom">r</div><div class="tip-ko">혀끝으로 윗잇몸을 한 번 톡 치고 바로 떼요.</div><div class="tip-en warn">Tongue tip taps the gum ridge ONCE. Do NOT hold.</div><div class="word">오리 · 마루<span>duck · wooden floor</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄴ</div><div class="fsplit"><div class="rom">n</div><div class="tip-ko">혀끝을 윗잇몸에 대고 코로 소리 내요.</div><div class="tip-en">Tongue tip on the gum ridge. Sound through the nose.</div><div class="word"><b class="hl">나</b>라 · <b class="hl">누나</b><span>country · older sister</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅁ</div><div class="fsplit"><div class="rom">m</div><div class="tip-ko">입술을 닫았다가 코로 소리 내요.</div><div class="tip-en">Close your lips. Hum through the nose.</div><div class="word">나<b class="hl">무</b> · 이<b class="hl">마</b><span>tree · forehead</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄹ</div><div class="fsplit"><div class="rom">r</div><div class="tip-ko">혀끝으로 윗잇몸을 한 번 톡 치고 바로 떼요.</div><div class="tip-en warn">Tongue tip taps the gum ridge ONCE. Do NOT hold.</div><div class="word">오<b class="hl">리</b> · 마<b class="hl">루</b><span>duck · wooden floor</span></div></div></div>
 <div class="fgroup">2과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">나라</div><div class="fsplit"><div class="rom">na&#8209;ra</div><div class="mean">country</div><div class="when">2과 · Lesson 2</div></div></div>
 <div class="fcard"><div class="glyph g2">누나</div><div class="fsplit"><div class="rom">nu&#8209;na</div><div class="mean">older sister (a man says)</div><div class="when">2과 · Lesson 2</div></div></div>
@@ -212,11 +230,11 @@
 <div class="fcard"><div class="glyph g2">저는 ○○이에요. / ○○예요.</div><div class="fsplit"><div class="rom">jeo&#8209;neun ○○&#8209;i&#8209;e&#8209;yo / ○○&#8209;ye&#8209;yo</div><div class="mean">I am ○○.</div><div class="when">이름에 따라 이에요 / 예요 — 선생님이 알려 줘요 · 통째로 / 이에요 or 예요 — it depends on your name. The teacher tells you. · as a whole</div></div></div>
 <div id="L3"></div>
 <div class="fgroup">3과 · 모음 Vowels</div>
-<div class="fcard"><div class="glyph v">ㅓ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="65" ry="45" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="50" ry="30" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.8" rx="33.333333333333336" ry="10" fill="#b96e6e"/><line x1="29" y1="75" x2="11" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="11,75 21,68 21,82" fill="#1F3864"/><line x1="171" y1="75" x2="189" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="189,75 179,68 179,82" fill="#1F3864"/></svg><div class="rom">eo</div><div class="tip-ko">ㅡ에서 시작해 턱만 내려요. 입술은 둥글게 하지 마세요.</div><div class="tip-en warn">Start from ㅡ. Drop the jaw. Lips NOT round.</div><div class="word">어머니 · 머리<span>mother · head</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅑ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="74" ry="63" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="59" ry="48" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="101.88" rx="39.333333333333336" ry="16" fill="#b96e6e"/><line x1="20" y1="75" x2="2" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="2,75 12,68 12,82" fill="#1F3864"/><line x1="180" y1="75" x2="198" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="198,75 188,68 188,82" fill="#1F3864"/></svg><div class="rom">ya</div><div class="tip-ko">ㅣ에서 빨리 ㅏ로, 한 번에.</div><div class="tip-en">From ㅣ to ㅏ, quickly. ONE beat.</div><div class="word">야</div></div></div>
-<div class="fcard"><div class="glyph v">ㅕ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="65" ry="45" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="50" ry="30" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.8" rx="33.333333333333336" ry="10" fill="#b96e6e"/><line x1="29" y1="75" x2="11" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="11,75 21,68 21,82" fill="#1F3864"/><line x1="171" y1="75" x2="189" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="189,75 179,68 179,82" fill="#1F3864"/></svg><div class="rom">yeo</div><div class="tip-ko">ㅣ에서 빨리 ㅓ로, 한 번에. 입술은 둥글게 하지 마세요.</div><div class="tip-en">From ㅣ to ㅓ, quickly. Lips NOT round.</div><div class="word">여우 · 여러<span>fox · several</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅛ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">yo</div><div class="tip-ko">ㅣ에서 빨리 ㅗ로, 입술을 동그랗게.</div><div class="tip-en">From ㅣ to ㅗ, quickly. ROUND lips.</div><div class="word">요리<span>cooking</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅠ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">yu</div><div class="tip-ko">ㅣ에서 빨리 ㅜ로, 입술을 동그랗게 내밀어요.</div><div class="tip-en">From ㅣ to ㅜ, quickly. ROUND lips, push forward.</div><div class="word">우유 · 유리<span>milk · glass</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅓ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="65" ry="45" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="50" ry="30" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.8" rx="33.333333333333336" ry="10" fill="#b96e6e"/><line x1="29" y1="75" x2="11" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="11,75 21,68 21,82" fill="#1F3864"/><line x1="171" y1="75" x2="189" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="189,75 179,68 179,82" fill="#1F3864"/></svg><div class="rom">eo</div><div class="tip-ko">ㅡ에서 시작해 턱만 내려요. 입술은 둥글게 하지 마세요.</div><div class="tip-en warn">Start from ㅡ. Drop the jaw. Lips NOT round.</div><div class="word"><b class="hl">어머</b>니 · <b class="hl">머</b>리<span>mother · head</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅑ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="74" ry="63" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="59" ry="48" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="101.88" rx="39.333333333333336" ry="16" fill="#b96e6e"/><line x1="20" y1="75" x2="2" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="2,75 12,68 12,82" fill="#1F3864"/><line x1="180" y1="75" x2="198" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="198,75 188,68 188,82" fill="#1F3864"/></svg><div class="rom">ya</div><div class="tip-ko">ㅣ에서 빨리 ㅏ로, 한 번에.</div><div class="tip-en">From ㅣ to ㅏ, quickly. ONE beat.</div><div class="word"><b class="hl">야</b></div></div></div>
+<div class="fcard"><div class="glyph v">ㅕ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="65" ry="45" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="50" ry="30" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.8" rx="33.333333333333336" ry="10" fill="#b96e6e"/><line x1="29" y1="75" x2="11" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="11,75 21,68 21,82" fill="#1F3864"/><line x1="171" y1="75" x2="189" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="189,75 179,68 179,82" fill="#1F3864"/></svg><div class="rom">yeo</div><div class="tip-ko">ㅣ에서 빨리 ㅓ로, 한 번에. 입술은 둥글게 하지 마세요.</div><div class="tip-en">From ㅣ to ㅓ, quickly. Lips NOT round.</div><div class="word"><b class="hl">여</b>우 · <b class="hl">여</b>러<span>fox · several</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅛ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">yo</div><div class="tip-ko">ㅣ에서 빨리 ㅗ로, 입술을 동그랗게.</div><div class="tip-en">From ㅣ to ㅗ, quickly. ROUND lips.</div><div class="word"><b class="hl">요</b>리<span>cooking</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅠ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">yu</div><div class="tip-ko">ㅣ에서 빨리 ㅜ로, 입술을 동그랗게 내밀어요.</div><div class="tip-en">From ㅣ to ㅜ, quickly. ROUND lips, push forward.</div><div class="word">우<b class="hl">유</b> · <b class="hl">유</b>리<span>milk · glass</span></div></div></div>
 <div class="fgroup">3과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">어머니</div><div class="fsplit"><div class="rom">eo&#8209;meo&#8209;ni</div><div class="mean">mother</div><div class="when">3과 · Lesson 3</div></div></div>
 <div class="fcard"><div class="glyph g2">머리</div><div class="fsplit"><div class="rom">meo&#8209;ri</div><div class="mean">head, hair</div><div class="when">3과 · Lesson 3</div></div></div>
@@ -236,11 +254,11 @@
 <div class="fcard"><div class="glyph g2">학생</div><div class="fsplit"><div class="rom">hak&#8209;ssaeng</div><div class="mean">student</div><div class="when">저는 학생이에요. · 통째로 / I am a student. · as a whole</div></div></div>
 <div id="L4"></div>
 <div class="fgroup">4과 · 평음 Plain</div>
-<div class="fcard"><div class="glyph v">ㅂ</div><div class="fsplit"><div class="rom">b</div><div class="tip-ko">입술을 닫았다가 살짝 떼요. 바람 조금.</div><div class="tip-en">Close your lips, then open. A little air.</div><div class="word">바다 · 두부<span>sea · tofu</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄷ</div><div class="fsplit"><div class="rom">d</div><div class="tip-ko">혀끝을 윗잇몸에 댔다가 살짝 떼요. 바람 조금.</div><div class="tip-en">Tongue tip on the gum ridge, then off. A little air.</div><div class="word">다리 · 도시<span>leg · city</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄱ</div><div class="fsplit"><div class="rom">g</div><div class="tip-ko">혀 뒤를 올렸다가 떼요. 앞에서는 바람 조금, 가운데에서는 g.</div><div class="tip-en warn">Back of the tongue up, then off. Start: a little air. Middle: g.</div><div class="word">고기 · 가구<span>meat · furniture</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅅ</div><div class="fsplit"><div class="rom">s</div><div class="tip-ko">혀끝을 윗잇몸 가까이 두고 바람을 살짝 내보내요.</div><div class="tip-en">Tongue tip NEAR the gum ridge. Let a little air out: sss.</div><div class="word">소리 · 주소<span>sound · address</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅈ</div><div class="fsplit"><div class="rom">j</div><div class="tip-ko">혀 앞을 입천장에 댔다가 떼요. 바람 조금.</div><div class="tip-en">Tongue front on the roof of the mouth, then off. A little air.</div><div class="word">지도 · 바지<span>map · trousers</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅂ</div><div class="fsplit"><div class="rom">b</div><div class="tip-ko">입술을 닫았다가 살짝 떼요. 바람 조금.</div><div class="tip-en">Close your lips, then open. A little air.</div><div class="word"><b class="hl">바</b>다 · 두<b class="hl">부</b><span>sea · tofu</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄷ</div><div class="fsplit"><div class="rom">d</div><div class="tip-ko">혀끝을 윗잇몸에 댔다가 살짝 떼요. 바람 조금.</div><div class="tip-en">Tongue tip on the gum ridge, then off. A little air.</div><div class="word"><b class="hl">다</b>리 · <b class="hl">도</b>시<span>leg · city</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄱ</div><div class="fsplit"><div class="rom">g</div><div class="tip-ko">혀 뒤를 올렸다가 떼요. 앞에서는 바람 조금, 가운데에서는 g.</div><div class="tip-en warn">Back of the tongue up, then off. Start: a little air. Middle: g.</div><div class="word"><b class="hl">고기</b> · <b class="hl">가구</b><span>meat · furniture</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅅ</div><div class="fsplit"><div class="rom">s</div><div class="tip-ko">혀끝을 윗잇몸 가까이 두고 바람을 살짝 내보내요.</div><div class="tip-en">Tongue tip NEAR the gum ridge. Let a little air out: sss.</div><div class="word"><b class="hl">소</b>리 · 주<b class="hl">소</b><span>sound · address</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅈ</div><div class="fsplit"><div class="rom">j</div><div class="tip-ko">혀 앞을 입천장에 댔다가 떼요. 바람 조금.</div><div class="tip-en">Tongue front on the roof of the mouth, then off. A little air.</div><div class="word"><b class="hl">지</b>도 · 바<b class="hl">지</b><span>map · trousers</span></div></div></div>
 <div class="fgroup">4과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">바지</div><div class="fsplit"><div class="rom">ba&#8209;ji</div><div class="mean">trousers</div><div class="when">4과 · Lesson 4</div></div></div>
 <div class="fcard"><div class="glyph g2">지도</div><div class="fsplit"><div class="rom">ji&#8209;do</div><div class="mean">map</div><div class="when">4과 · Lesson 4</div></div></div>
@@ -260,11 +278,11 @@
 <div class="fcard"><div class="glyph g2">○○예요. / ○○이에요.</div><div class="fsplit"><div class="rom">○○&#8209;ye&#8209;yo / ○○&#8209;i&#8209;e&#8209;yo</div><div class="mean">It is ○○.</div><div class="when">오늘 단어 12개는 모두 예요 — 바지예요 · 통째로 / all 12 words today take 예요 — 바지예요 · as a whole</div></div></div>
 <div id="L5"></div>
 <div class="fgroup">5과 · 격음 Aspirated</div>
-<div class="fcard"><div class="glyph v">ㅍ</div><div class="fsplit"><div class="rom">p</div><div class="tip-ko">ㅂ처럼 입술을 닫았다가, 바람을 세게!</div><div class="tip-en warn">Like ㅂ: lips closed. Then STRONG air.</div><div class="word">포도 · 피자<span>grapes · pizza</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅌ</div><div class="fsplit"><div class="rom">t</div><div class="tip-ko">ㄷ처럼 혀끝을 윗잇몸에 댔다가, 바람을 세게!</div><div class="tip-en">Like ㄷ: tongue tip on the gum ridge. Then STRONG air.</div><div class="word">타조 · 토마토<span>ostrich · tomato</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅋ</div><div class="fsplit"><div class="rom">k</div><div class="tip-ko">ㄱ처럼 혀 뒤를 올렸다가, 바람을 세게!</div><div class="tip-en">Like ㄱ: tongue back up. Then STRONG air.</div><div class="word">코 · 커피<span>nose · coffee</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅊ</div><div class="fsplit"><div class="rom">ch</div><div class="tip-ko">ㅈ처럼 혀 앞을 입천장에 댔다가, 바람을 세게!</div><div class="tip-en">Like ㅈ: tongue front on the roof. Then STRONG air.</div><div class="word">기차 · 치마<span>train · skirt</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅎ</div><div class="fsplit"><div class="rom">h</div><div class="tip-ko">입을 열고 목에서 바람을 내보내요.</div><div class="tip-en">Open your mouth. Air from the throat.</div><div class="word">하마 · 호수<span>hippo · lake</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅍ</div><div class="fsplit"><div class="rom">p</div><div class="tip-ko">ㅂ처럼 입술을 닫았다가, 바람을 세게!</div><div class="tip-en warn">Like ㅂ: lips closed. Then STRONG air.</div><div class="word"><b class="hl">포</b>도 · <b class="hl">피</b>자<span>grapes · pizza</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅌ</div><div class="fsplit"><div class="rom">t</div><div class="tip-ko">ㄷ처럼 혀끝을 윗잇몸에 댔다가, 바람을 세게!</div><div class="tip-en">Like ㄷ: tongue tip on the gum ridge. Then STRONG air.</div><div class="word"><b class="hl">타</b>조 · <b class="hl">토</b>마<b class="hl">토</b><span>ostrich · tomato</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅋ</div><div class="fsplit"><div class="rom">k</div><div class="tip-ko">ㄱ처럼 혀 뒤를 올렸다가, 바람을 세게!</div><div class="tip-en">Like ㄱ: tongue back up. Then STRONG air.</div><div class="word"><b class="hl">코</b> · <b class="hl">커</b>피<span>nose · coffee</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅊ</div><div class="fsplit"><div class="rom">ch</div><div class="tip-ko">ㅈ처럼 혀 앞을 입천장에 댔다가, 바람을 세게!</div><div class="tip-en">Like ㅈ: tongue front on the roof. Then STRONG air.</div><div class="word">기<b class="hl">차</b> · <b class="hl">치</b>마<span>train · skirt</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅎ</div><div class="fsplit"><div class="rom">h</div><div class="tip-ko">입을 열고 목에서 바람을 내보내요.</div><div class="tip-en">Open your mouth. Air from the throat.</div><div class="word"><b class="hl">하</b>마 · <b class="hl">호</b>수<span>hippo · lake</span></div></div></div>
 <div class="fgroup">5과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">포도</div><div class="fsplit"><div class="rom">po&#8209;do</div><div class="mean">grapes</div><div class="when">5과 · Lesson 5</div></div></div>
 <div class="fcard"><div class="glyph g2">코</div><div class="fsplit"><div class="rom">ko</div><div class="mean">nose</div><div class="when">5과 · Lesson 5</div></div></div>
@@ -287,11 +305,11 @@
 <div class="fcard"><div class="glyph g2">잘 먹었습니다.</div><div class="fsplit"><div class="rom">jal meo&#8209;geot&#8209;sseum&#8209;ni&#8209;da</div><div class="mean">I enjoyed the meal.</div><div class="when">밥을 먹은 뒤에 · 통째로 / AFTER eating · as a whole</div></div></div>
 <div id="L6"></div>
 <div class="fgroup">6과 · 경음 Tense</div>
-<div class="fcard"><div class="glyph v">ㅃ</div><div class="fsplit"><div class="rom">pp</div><div class="tip-ko">ㅂ처럼 입술을 닫고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㅂ: lips closed. Tight throat, NO air.</div><div class="word">아빠 · 뿌리<span>dad · root</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄸ</div><div class="fsplit"><div class="rom">tt</div><div class="tip-ko">ㄷ처럼 혀끝을 윗잇몸에 대고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㄷ: tongue tip on the gum ridge. Tight throat, NO air.</div><div class="word">또 · 이따가<span>again · later</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄲ</div><div class="fsplit"><div class="rom">kk</div><div class="tip-ko">ㄱ처럼 혀 뒤를 올리고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㄱ: tongue back up. Tight throat, NO air.</div><div class="word">토끼 · 꼬리<span>rabbit · tail</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅆ</div><div class="fsplit"><div class="rom">ss</div><div class="tip-ko">ㅅ처럼 혀끝을 윗잇몸 가까이. ㅅ은 바람 조금, ㅆ은 목에 힘! 바람 없이.</div><div class="tip-en warn">ㅅ: a little air. ㅆ: tight, NO air — short and sharp.</div><div class="word">아저씨 · 비싸요<span>mister · expensive</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅉ</div><div class="fsplit"><div class="rom">jj</div><div class="tip-ko">ㅈ처럼 혀 앞을 입천장에 대고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㅈ: tongue front on the roof. Tight throat, NO air.</div><div class="word">가짜 · 짜요<span>fake · salty</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅃ</div><div class="fsplit"><div class="rom">pp</div><div class="tip-ko">ㅂ처럼 입술을 닫고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㅂ: lips closed. Tight throat, NO air.</div><div class="word">아<b class="hl">빠</b> · <b class="hl">뿌</b>리<span>dad · root</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄸ</div><div class="fsplit"><div class="rom">tt</div><div class="tip-ko">ㄷ처럼 혀끝을 윗잇몸에 대고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㄷ: tongue tip on the gum ridge. Tight throat, NO air.</div><div class="word"><b class="hl">또</b> · 이<b class="hl">따</b>가<span>again · later</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄲ</div><div class="fsplit"><div class="rom">kk</div><div class="tip-ko">ㄱ처럼 혀 뒤를 올리고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㄱ: tongue back up. Tight throat, NO air.</div><div class="word">토<b class="hl">끼</b> · <b class="hl">꼬</b>리<span>rabbit · tail</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅆ</div><div class="fsplit"><div class="rom">ss</div><div class="tip-ko">ㅅ처럼 혀끝을 윗잇몸 가까이. ㅅ은 바람 조금, ㅆ은 목에 힘! 바람 없이.</div><div class="tip-en warn">ㅅ: a little air. ㅆ: tight, NO air — short and sharp.</div><div class="word">아저<b class="hl">씨</b> · 비<b class="hl">싸</b>요<span>mister · expensive</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅉ</div><div class="fsplit"><div class="rom">jj</div><div class="tip-ko">ㅈ처럼 혀 앞을 입천장에 대고, 목에 힘! 바람 없이.</div><div class="tip-en">Like ㅈ: tongue front on the roof. Tight throat, NO air.</div><div class="word">가<b class="hl">짜</b> · <b class="hl">짜</b>요<span>fake · salty</span></div></div></div>
 <div class="fgroup">6과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">아빠</div><div class="fsplit"><div class="rom">a&#8209;ppa</div><div class="mean">dad</div><div class="when">6과 · Lesson 6</div></div></div>
 <div class="fcard"><div class="glyph g2">오빠</div><div class="fsplit"><div class="rom">o&#8209;ppa</div><div class="mean">older brother (a woman says)</div><div class="when">6과 · Lesson 6</div></div></div>
@@ -313,11 +331,11 @@
 <div class="fcard"><div class="glyph g2">네. / 아니요.</div><div class="fsplit"><div class="rom">ne / a&#8209;ni&#8209;yo</div><div class="mean">Yes. / No.</div><div class="when">묻는 말에 대답할 때 · 통째로 / to answer a question · as a whole</div></div></div>
 <div id="L7"></div>
 <div class="fgroup">7과 · 세 소리 Three sounds</div>
-<div class="fcard"><div class="glyph t">바 파 빠</div><div class="fsplit"><div class="rom">ba · pa · ppa</div><div class="tip-ko">바는 조금, 파는 세게, 빠는 바람 없이</div><div class="tip-en warn">바 a little air · 파 STRONG air · 빠 NO air</div><div class="word">비 · 피 · 아빠<span>rain · blood · dad</span></div></div></div>
-<div class="fcard"><div class="glyph t">다 타 따</div><div class="fsplit"><div class="rom">da · ta · tta</div><div class="tip-ko">다는 조금, 타는 세게, 따는 바람 없이</div><div class="tip-en">다 a little air · 타 STRONG air · 따 NO air</div><div class="word">다리 · 타다 · 따다<span>leg · ride · pick</span></div></div></div>
-<div class="fcard"><div class="glyph t">가 카 까</div><div class="fsplit"><div class="rom">ga · ka · kka</div><div class="tip-ko">가는 조금, 카는 세게, 까는 바람 없이</div><div class="tip-en">가 a little air · 카 STRONG air · 까 NO air</div><div class="word">고기 · 코 · 꼬리<span>meat · nose · tail</span></div></div></div>
-<div class="fcard"><div class="glyph t">사 싸</div><div class="fsplit"><div class="rom">sa · ssa</div><div class="tip-ko">ㅅ은 둘뿐 — 사는 조금, 싸는 바람 없이</div><div class="tip-en">ㅅ has only TWO — 사 a little air · 싸 NO air</div><div class="word">사다 · 싸다<span>buy · cheap</span></div></div></div>
-<div class="fcard"><div class="glyph t">자 차 짜</div><div class="fsplit"><div class="rom">ja · cha · jja</div><div class="tip-ko">자는 조금, 차는 세게, 짜는 바람 없이</div><div class="tip-en">자 a little air · 차 STRONG air · 짜 NO air</div><div class="word">자다 · 차다 · 짜다<span>sleep · kick · salty</span></div></div></div>
+<div class="fcard"><div class="glyph t">바 파 빠</div><div class="fsplit"><div class="rom">ba · pa · ppa</div><div class="tip-ko">바는 조금, 파는 세게, 빠는 바람 없이</div><div class="tip-en warn">바 a little air · 파 STRONG air · 빠 NO air</div><div class="word"><b class="hl">비</b> · <b class="hl">피</b> · 아<b class="hl">빠</b><span>rain · blood · dad</span></div></div></div>
+<div class="fcard"><div class="glyph t">다 타 따</div><div class="fsplit"><div class="rom">da · ta · tta</div><div class="tip-ko">다는 조금, 타는 세게, 따는 바람 없이</div><div class="tip-en">다 a little air · 타 STRONG air · 따 NO air</div><div class="word"><b class="hl">다</b>리 · <b class="hl">타</b>다 · <b class="hl">따</b>다<span>leg · ride · pick</span></div></div></div>
+<div class="fcard"><div class="glyph t">가 카 까</div><div class="fsplit"><div class="rom">ga · ka · kka</div><div class="tip-ko">가는 조금, 카는 세게, 까는 바람 없이</div><div class="tip-en">가 a little air · 카 STRONG air · 까 NO air</div><div class="word"><b class="hl">고기</b> · <b class="hl">코</b> · <b class="hl">꼬</b>리<span>meat · nose · tail</span></div></div></div>
+<div class="fcard"><div class="glyph t">사 싸</div><div class="fsplit"><div class="rom">sa · ssa</div><div class="tip-ko">ㅅ은 둘뿐 — 사는 조금, 싸는 바람 없이</div><div class="tip-en">ㅅ has only TWO — 사 a little air · 싸 NO air</div><div class="word"><b class="hl">사</b>다 · <b class="hl">싸</b>다<span>buy · cheap</span></div></div></div>
+<div class="fcard"><div class="glyph t">자 차 짜</div><div class="fsplit"><div class="rom">ja · cha · jja</div><div class="tip-ko">자는 조금, 차는 세게, 짜는 바람 없이</div><div class="tip-en">자 a little air · 차 STRONG air · 짜 NO air</div><div class="word"><b class="hl">자</b>다 · <b class="hl">차</b>다 · <b class="hl">짜</b>다<span>sleep · kick · salty</span></div></div></div>
 <div class="fgroup">7과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">다리</div><div class="fsplit"><div class="rom">da&#8209;ri</div><div class="mean">leg</div><div class="when">7과 · Lesson 7</div></div></div>
 <div class="fcard"><div class="glyph g2">타다</div><div class="fsplit"><div class="rom">ta&#8209;da</div><div class="mean">to ride</div><div class="when">7과 · Lesson 7</div></div></div>
@@ -346,10 +364,10 @@
 <div class="fcard"><div class="glyph g2">아파요? ↗ / 아니요.</div><div class="fsplit"><div class="rom">a&#8209;pa&#8209;yo ↗ / a&#8209;ni&#8209;yo</div><div class="mean">Does it hurt? / No.</div><div class="when">올리면 질문, 아니요로 대답 / voice UP = question · answer: No.</div></div></div>
 <div id="L8"></div>
 <div class="fgroup">8과 · 받침 Finals</div>
-<div class="fcard"><div class="glyph v">ㄴ</div><div class="fsplit"><div class="rom">&#8209;n</div><div class="tip-ko">혀끝을 윗잇몸에 대고 멈춰요</div><div class="tip-en">Tongue tip UP on the gum ridge. Hold.</div><div class="word">산 · 눈 · 손<span>mountain · eye · hand</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅁ</div><div class="fsplit"><div class="rom">&#8209;m</div><div class="tip-ko">입술을 닫고 멈춰요</div><div class="tip-en">Close your LIPS. Hold.</div><div class="word">밤 · 사람 · 이름<span>night · person · name</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅇ</div><div class="fsplit"><div class="rom">&#8209;ng</div><div class="tip-ko">입을 열고 혀끝은 아래, 혀 뒤로 멈춰요</div><div class="tip-en warn">Mouth OPEN. Tip DOWN. Stop at the back.</div><div class="word">강 · 방 · 형<span>river · room · older brother</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㄹ</div><div class="fsplit"><div class="rom">&#8209;l</div><div class="tip-ko">혀끝을 윗잇몸에 대고 그대로 — 톡 치지 않아요</div><div class="tip-en">Tongue tip on the gum ridge. STAY. No tap.</div><div class="word">물 · 말 · 길<span>water · words · road</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄴ</div><div class="fsplit"><div class="rom">&#8209;n</div><div class="tip-ko">혀끝을 윗잇몸에 대고 멈춰요</div><div class="tip-en">Tongue tip UP on the gum ridge. Hold.</div><div class="word"><b class="hl">산</b> · <b class="hl">눈</b> · <b class="hl">손</b><span>mountain · eye · hand</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅁ</div><div class="fsplit"><div class="rom">&#8209;m</div><div class="tip-ko">입술을 닫고 멈춰요</div><div class="tip-en">Close your LIPS. Hold.</div><div class="word"><b class="hl">밤</b> · 사<b class="hl">람</b> · 이<b class="hl">름</b><span>night · person · name</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅇ</div><div class="fsplit"><div class="rom">&#8209;ng</div><div class="tip-ko">입을 열고 혀끝은 아래, 혀 뒤로 멈춰요</div><div class="tip-en warn">Mouth OPEN. Tip DOWN. Stop at the back.</div><div class="word"><b class="hl">강</b> · <b class="hl">방</b> · <b class="hl">형</b><span>river · room · older brother</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㄹ</div><div class="fsplit"><div class="rom">&#8209;l</div><div class="tip-ko">혀끝을 윗잇몸에 대고 그대로 — 톡 치지 않아요</div><div class="tip-en">Tongue tip on the gum ridge. STAY. No tap.</div><div class="word"><b class="hl">물</b> · <b class="hl">말</b> · <b class="hl">길</b><span>water · words · road</span></div></div></div>
 <div class="fgroup">8과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">물</div><div class="fsplit"><div class="rom">mul</div><div class="mean">water</div><div class="when">8과 · Lesson 8</div></div></div>
 <div class="fcard"><div class="glyph g2">돈</div><div class="fsplit"><div class="rom">don</div><div class="mean">money</div><div class="when">8과 · Lesson 8</div></div></div>
@@ -406,9 +424,9 @@
 <div class="fcard"><div class="glyph v">ㅉ</div><div class="fsplit"><div class="rom">ssang&#8209;ji&#8209;eut</div><div class="mean">쌍지읒</div><div class="when">자음 이름 · 통째로 / consonant name · as a whole</div></div></div>
 <div id="L9"></div>
 <div class="fgroup">9과 · 받침 Finals</div>
-<div class="fcard"><div class="glyph t">ㄱ ㄲ ㅋ</div><div class="fsplit"><div class="rom">&#8209;k</div><div class="tip-ko">혀 뒤로 막고 멈춰요</div><div class="tip-en">Back of tongue CLOSES. STOP.</div><div class="word">국 · 떡 · 밖<span>soup · rice cake · outside</span></div></div></div>
-<div class="fcard"><div class="glyph t">ㄷ ㅅ ㅈ ㅊ ㅌ</div><div class="fsplit"><div class="rom">&#8209;t</div><div class="tip-ko">혀끝을 윗잇몸에 대고 멈춰요 — 글자 5개, 소리 하나</div><div class="tip-en">Tongue tip on the gum ridge. STOP. 5 letters, ONE sound.</div><div class="word">옷 · 낮 · 꽃 · 끝<span>clothes · daytime · flower · end</span></div></div></div>
-<div class="fcard"><div class="glyph t">ㅂ ㅍ</div><div class="fsplit"><div class="rom">&#8209;p</div><div class="tip-ko">입술을 닫고 멈춰요 — 다시 열지 않아요</div><div class="tip-en warn">Close your LIPS. STOP. Don't open again.</div><div class="word">밥 · 집 · 앞<span>rice · house · front</span></div></div></div>
+<div class="fcard"><div class="glyph t">ㄱ ㄲ ㅋ</div><div class="fsplit"><div class="rom">&#8209;k</div><div class="tip-ko">혀 뒤로 막고 멈춰요</div><div class="tip-en">Back of tongue CLOSES. STOP.</div><div class="word"><b class="hl">국</b> · <b class="hl">떡</b> · <b class="hl">밖</b><span>soup · rice cake · outside</span></div></div></div>
+<div class="fcard"><div class="glyph t">ㄷ ㅅ ㅈ ㅊ ㅌ</div><div class="fsplit"><div class="rom">&#8209;t</div><div class="tip-ko">혀끝을 윗잇몸에 대고 멈춰요 — 글자 5개, 소리 하나</div><div class="tip-en">Tongue tip on the gum ridge. STOP. 5 letters, ONE sound.</div><div class="word"><b class="hl">옷</b> · <b class="hl">낮</b> · <b class="hl">꽃</b> · <b class="hl">끝</b><span>clothes · daytime · flower · end</span></div></div></div>
+<div class="fcard"><div class="glyph t">ㅂ ㅍ</div><div class="fsplit"><div class="rom">&#8209;p</div><div class="tip-ko">입술을 닫고 멈춰요 — 다시 열지 않아요</div><div class="tip-en warn">Close your LIPS. STOP. Don't open again.</div><div class="word"><b class="hl">밥</b> · <b class="hl">집</b> · <b class="hl">앞</b><span>rice · house · front</span></div></div></div>
 <div class="fgroup">9과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">약</div><div class="fsplit"><div class="rom">yak</div><div class="mean">medicine</div><div class="when">9과 · Lesson 9</div></div></div>
 <div class="fcard"><div class="glyph g2">옷</div><div class="fsplit"><div class="rom">ot</div><div class="mean">clothes</div><div class="when">9과 · Lesson 9</div></div></div>
@@ -443,10 +461,10 @@
 <div class="fcard"><div class="glyph g2">몇 시부터 몇 시까지 일해요? / 여덟 시부터 다섯 시까지 일해요.</div><div class="fsplit"><div class="rom">myeot&#8209;ssi&#8209;bu&#8209;teo myeot&#8209;ssi&#8209;kka&#8209;ji il&#8209;hae&#8209;yo / yeo&#8209;deol&#8209;si&#8209;bu&#8209;teo da&#8209;seot&#8209;ssi&#8209;kka&#8209;ji il&#8209;hae&#8209;yo</div><div class="mean">What are your work hours? / I work from 8 to 5.</div><div class="when">일하는 시간 묻고 답하기 · 통째로 / ask the WORK HOURS · as a whole</div></div></div>
 <div id="L10"></div>
 <div class="fgroup">10과 · 연음 Linking</div>
-<div class="fcard"><div class="glyph t">옷 + 이</div><div class="fsplit"><div class="rom">o&#8209;si</div><div class="tip-ko">받침 ㅅ이 그대로 넘어가요 — [오시]. [오디]가 아니에요</div><div class="tip-en warn">The ㅅ itself moves over: [o-si]. NOT [o-di].</div><div class="word">옷이 있어요<span>I have clothes.</span></div></div></div>
-<div class="fcard"><div class="glyph t">밥 + 을</div><div class="fsplit"><div class="rom">ba&#8209;beul</div><div class="tip-ko">받침 ㅂ이 넘어가요 — [바블]. 멈추지 않아요</div><div class="tip-en">The ㅂ moves over: [ba-beul]. Don't stop.</div><div class="word">밥을 먹어요<span>I eat a meal.</span></div></div></div>
-<div class="fcard"><div class="glyph t">얼 + 음</div><div class="fsplit"><div class="rom">eo&#8209;reum</div><div class="tip-ko">받침 ㄹ이 넘어가면 톡, 한 번 — [어름]</div><div class="tip-en">ㄹ moves over — one quick tap: [eo-reum].</div><div class="word">얼음 · 놀이 · 발음<span>ice · game · pronunciation</span></div></div></div>
-<div class="fcard"><div class="glyph t">있 + 어요</div><div class="fsplit"><div class="rom">i&#8209;sseo&#8209;yo</div><div class="tip-ko">새 받침 ㅆ — 넘어가도 ㅆ: [이써요]</div><div class="tip-en">New 받침 ㅆ. It moves over as ㅆ: [i-sseo-yo].</div><div class="word">시간이 있어요<span>I have time.</span></div></div></div>
+<div class="fcard"><div class="glyph t">옷 + 이</div><div class="fsplit"><div class="rom">o&#8209;si</div><div class="tip-ko">받침 ㅅ이 그대로 넘어가요 — [오시]. [오디]가 아니에요</div><div class="tip-en warn">The ㅅ itself moves over: [o-si]. NOT [o-di].</div><div class="word"><b class="hl">옷이</b> 있어요<span>I have clothes.</span></div></div></div>
+<div class="fcard"><div class="glyph t">밥 + 을</div><div class="fsplit"><div class="rom">ba&#8209;beul</div><div class="tip-ko">받침 ㅂ이 넘어가요 — [바블]. 멈추지 않아요</div><div class="tip-en">The ㅂ moves over: [ba-beul]. Don't stop.</div><div class="word"><b class="hl">밥을</b> 먹어요<span>I eat a meal.</span></div></div></div>
+<div class="fcard"><div class="glyph t">얼 + 음</div><div class="fsplit"><div class="rom">eo&#8209;reum</div><div class="tip-ko">받침 ㄹ이 넘어가면 톡, 한 번 — [어름]</div><div class="tip-en">ㄹ moves over — one quick tap: [eo-reum].</div><div class="word"><b class="hl">얼음</b> · <b class="hl">놀이</b> · <b class="hl">발음</b><span>ice · game · pronunciation</span></div></div></div>
+<div class="fcard"><div class="glyph t">있 + 어요</div><div class="fsplit"><div class="rom">i&#8209;sseo&#8209;yo</div><div class="tip-ko">새 받침 ㅆ — 넘어가도 ㅆ: [이써요]</div><div class="tip-en">New 받침 ㅆ. It moves over as ㅆ: [i-sseo-yo].</div><div class="word">시간이 <b class="hl">있어</b>요<span>I have time.</span></div></div></div>
 <div class="fgroup">10과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">공장</div><div class="fsplit"><div class="rom">gong&#8209;jang</div><div class="mean">factory</div><div class="when">10과 · Lesson 10</div></div></div>
 <div class="fcard"><div class="glyph g2">기숙사</div><div class="fsplit"><div class="rom">gi&#8209;suk&#8209;ssa</div><div class="mean">dormitory</div><div class="when">10과 · Lesson 10</div></div></div>
@@ -518,10 +536,10 @@
 <div class="fcard"><div class="glyph g2">한 시간 걸려요.</div><div class="fsplit"><div class="rom">han si&#8209;gan geol&#8209;lyeo&#8209;yo</div><div class="mean">It takes one hour.</div><div class="when">시간 답하기 / answer HOW LONG</div></div></div>
 <div id="L12"></div>
 <div class="fgroup">12과 · 모음 Vowels</div>
-<div class="fcard"><div class="glyph v">ㅐ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">ae</div><div class="tip-ko">입을 조금 벌려요. 소리는 ㅔ와 같아요.</div><div class="tip-en warn">Open a little. SAME sound as ㅔ.</div><div class="word">개 · 내일<span>dog · tomorrow</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅔ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">e</div><div class="tip-ko">입을 조금 벌려요. 소리는 ㅐ와 같아요.</div><div class="tip-en">Open a little. SAME sound as ㅐ.</div><div class="word">게 · 가게<span>crab · shop</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅚ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">oe</div><div class="tip-ko">입술을 둥글게 시작해서 에로, 한 박자. 오이가 아니에요.</div><div class="tip-en">ROUND lips, then 에. ONE beat [we]. Not 오-이.</div><div class="word">회사 · 교회<span>company · church</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅟ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="53" ry="48" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="31" ry="26" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="89.56" rx="20.666666666666668" ry="8.666666666666666" fill="#b96e6e"/><line x1="33" y1="75" x2="45" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="45,75 55,68 55,82" fill="#1F3864"/><line x1="167" y1="75" x2="155" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="155,75 145,68 145,82" fill="#1F3864"/></svg><div class="rom">wi</div><div class="tip-ko">입술을 둥글게 내밀고 이로, 한 박자. 이에 입술을 대지 마세요.</div><div class="tip-en">ROUND lips forward, then 이. ONE beat [wi]. Lips OFF the teeth.</div><div class="word">귀 · 가위<span>ear · scissors</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅐ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">ae</div><div class="tip-ko">입을 조금 벌려요. 소리는 ㅔ와 같아요.</div><div class="tip-en warn">Open a little. SAME sound as ㅔ.</div><div class="word"><b class="hl">개</b> · <b class="hl">내</b>일<span>dog · tomorrow</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅔ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">e</div><div class="tip-ko">입을 조금 벌려요. 소리는 ㅐ와 같아요.</div><div class="tip-en">Open a little. SAME sound as ㅐ.</div><div class="word"><b class="hl">게</b> · 가<b class="hl">게</b><span>crab · shop</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅚ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">oe</div><div class="tip-ko">입술을 둥글게 시작해서 에로, 한 박자. 오이가 아니에요.</div><div class="tip-en">ROUND lips, then 에. ONE beat [we]. Not 오-이.</div><div class="word"><b class="hl">회</b>사 · 교<b class="hl">회</b><span>company · church</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅟ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="53" ry="48" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="31" ry="26" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="89.56" rx="20.666666666666668" ry="8.666666666666666" fill="#b96e6e"/><line x1="33" y1="75" x2="45" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="45,75 55,68 55,82" fill="#1F3864"/><line x1="167" y1="75" x2="155" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="155,75 145,68 145,82" fill="#1F3864"/></svg><div class="rom">wi</div><div class="tip-ko">입술을 둥글게 내밀고 이로, 한 박자. 이에 입술을 대지 마세요.</div><div class="tip-en">ROUND lips forward, then 이. ONE beat [wi]. Lips OFF the teeth.</div><div class="word"><b class="hl">귀</b> · 가<b class="hl">위</b><span>ear · scissors</span></div></div></div>
 <div class="fgroup">12과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">가게</div><div class="fsplit"><div class="rom">ga&#8209;ge</div><div class="mean">shop</div><div class="when">12과 · Lesson 12</div></div></div>
 <div class="fcard"><div class="glyph g2">어제</div><div class="fsplit"><div class="rom">eo&#8209;je</div><div class="mean">yesterday</div><div class="when">12과 · Lesson 12</div></div></div>
@@ -551,13 +569,13 @@
 <div class="fcard"><div class="glyph g2">내일 봐요.</div><div class="fsplit"><div class="rom">nae&#8209;il bwa&#8209;yo</div><div class="mean">See you tomorrow.</div><div class="when">헤어질 때(친구 · 동료) · 통째로 / leaving — friends, co-workers · as a whole</div></div></div>
 <div id="L13"></div>
 <div class="fgroup">13과 · 모음 Vowels</div>
-<div class="fcard"><div class="glyph v">ㅘ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">wa</div><div class="tip-ko">ㅗ로 입술을 둥글게 시작해서 ㅏ로, 한 번에.</div><div class="tip-en warn">Start ROUND (ㅗ), open to ㅏ. ONE go.</div><div class="word">사과 · 화장실<span>apple · toilet</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅝ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">wo</div><div class="tip-ko">ㅜ로 입술을 둥글게 시작해서 ㅓ로, 한 번에.</div><div class="tip-en">Start ROUND (ㅜ), open to ㅓ. ONE go.</div><div class="word">뭐 · 병원<span>what · hospital</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅙ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">wae</div><div class="tip-ko">소리는 ㅚ와 같아요. 둥글게, 한 박자.</div><div class="tip-en">SAME sound as ㅚ [we]. ROUND, ONE beat.</div><div class="word">왜 · 돼지<span>why · pig</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅞ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">we</div><div class="tip-ko">소리는 ㅚ · ㅙ와 같아요. 둥글게, 한 박자.</div><div class="tip-en">SAME sound as ㅚ ㅙ [we]. ROUND, ONE beat.</div><div class="word">웨이터<span>waiter</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅢ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="28" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="13" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">ui</div><div class="tip-ko">ㅡ로 입술을 옆으로 시작해서 ㅣ로, 한 박자.</div><div class="tip-en">Start FLAT (ㅡ), slide to ㅣ. ONE beat.</div><div class="word">의사 · 의자<span>doctor · chair</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅒ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">yae</div><div class="tip-ko">ㅣ를 짧게 먼저, 그리고 ㅐ. 소리는 ㅖ와 같아요.</div><div class="tip-en">Quick ㅣ, then ㅐ [ye]. SAME sound as ㅖ.</div><div class="word">얘기<span>talk, story</span></div></div></div>
-<div class="fcard"><div class="glyph v">ㅖ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">ye</div><div class="tip-ko">ㅣ를 짧게 먼저, 그리고 ㅔ. 소리는 ㅒ와 같아요.</div><div class="tip-en">Quick ㅣ, then ㅔ [ye]. SAME sound as ㅒ.</div><div class="word">예 · 시계<span>yes · clock</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅘ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="68" ry="61" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="46" ry="39" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="96.84" rx="30.666666666666668" ry="13" fill="#b96e6e"/><line x1="18" y1="75" x2="30" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="30,75 40,68 40,82" fill="#1F3864"/><line x1="182" y1="75" x2="170" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="170,75 160,68 160,82" fill="#1F3864"/></svg><div class="rom">wa</div><div class="tip-ko">ㅗ로 입술을 둥글게 시작해서 ㅏ로, 한 번에.</div><div class="tip-en warn">Start ROUND (ㅗ), open to ㅏ. ONE go.</div><div class="word">사<b class="hl">과</b> · <b class="hl">화</b>장실<span>apple · toilet</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅝ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="54" ry="51" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="32" ry="29" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="91.24000000000001" rx="21.333333333333332" ry="9.666666666666666" fill="#b96e6e"/><line x1="32" y1="75" x2="44" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="44,75 54,68 54,82" fill="#1F3864"/><line x1="168" y1="75" x2="156" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="156,75 146,68 146,82" fill="#1F3864"/></svg><div class="rom">wo</div><div class="tip-ko">ㅜ로 입술을 둥글게 시작해서 ㅓ로, 한 번에.</div><div class="tip-en">Start ROUND (ㅜ), open to ㅓ. ONE go.</div><div class="word"><b class="hl">뭐</b> · 병<b class="hl">원</b><span>what · hospital</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅙ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">wae</div><div class="tip-ko">소리는 ㅚ와 같아요. 둥글게, 한 박자.</div><div class="tip-en">SAME sound as ㅚ [we]. ROUND, ONE beat.</div><div class="word"><b class="hl">왜</b> · <b class="hl">돼</b>지<span>why · pig</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅞ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="62" ry="55" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="40" ry="33" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="93.48" rx="26.666666666666668" ry="11" fill="#b96e6e"/><line x1="24" y1="75" x2="36" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="36,75 46,68 46,82" fill="#1F3864"/><line x1="176" y1="75" x2="164" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="164,75 154,68 154,82" fill="#1F3864"/></svg><div class="rom">we</div><div class="tip-ko">소리는 ㅚ · ㅙ와 같아요. 둥글게, 한 박자.</div><div class="tip-en">SAME sound as ㅚ ㅙ [we]. ROUND, ONE beat.</div><div class="word"><b class="hl">웨</b>이터<span>waiter</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅢ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="85" ry="28" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="70" ry="13" fill="#5a282d" stroke="#461e23" stroke-width="2"/><line x1="9" y1="75" x2="-9" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="-9,75 1,68 1,82" fill="#1F3864"/><line x1="191" y1="75" x2="209" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="209,75 199,68 199,82" fill="#1F3864"/></svg><div class="rom">ui</div><div class="tip-ko">ㅡ로 입술을 옆으로 시작해서 ㅣ로, 한 박자.</div><div class="tip-en">Start FLAT (ㅡ), slide to ㅣ. ONE beat.</div><div class="word"><b class="hl">의</b>사 · <b class="hl">의</b>자<span>doctor · chair</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅒ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">yae</div><div class="tip-ko">ㅣ를 짧게 먼저, 그리고 ㅐ. 소리는 ㅖ와 같아요.</div><div class="tip-en">Quick ㅣ, then ㅐ [ye]. SAME sound as ㅖ.</div><div class="word"><b class="hl">얘</b>기<span>talk, story</span></div></div></div>
+<div class="fcard"><div class="glyph v">ㅖ</div><div class="fsplit"><svg class="mouth" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="75" rx="71" ry="47" fill="#f0c4c4" stroke="#c87878" stroke-width="3"/><ellipse cx="100" cy="75" rx="56" ry="32" fill="#5a282d" stroke="#461e23" stroke-width="2"/><ellipse cx="100" cy="92.92" rx="37.333333333333336" ry="10.666666666666666" fill="#b96e6e"/><line x1="23" y1="75" x2="5" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="5,75 15,68 15,82" fill="#1F3864"/><line x1="177" y1="75" x2="195" y2="75" stroke="#1F3864" stroke-width="5" stroke-linecap="round"/><polygon points="195,75 185,68 185,82" fill="#1F3864"/></svg><div class="rom">ye</div><div class="tip-ko">ㅣ를 짧게 먼저, 그리고 ㅔ. 소리는 ㅒ와 같아요.</div><div class="tip-en">Quick ㅣ, then ㅔ [ye]. SAME sound as ㅒ.</div><div class="word"><b class="hl">예</b> · 시<b class="hl">계</b><span>yes · clock</span></div></div></div>
 <div class="fgroup">13과 · 외울 단어 ★ Memorize</div>
 <div class="fcard"><div class="glyph g2">사과</div><div class="fsplit"><div class="rom">sa&#8209;gwa</div><div class="mean">apple</div><div class="when">13과 · Lesson 13</div></div></div>
 <div class="fcard"><div class="glyph g2">과자</div><div class="fsplit"><div class="rom">gwa&#8209;ja</div><div class="mean">snack</div><div class="when">13과 · Lesson 13</div></div></div>
@@ -652,10 +670,45 @@ function mouth(ow, oh, rounded){
     + '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(ow/2)+'" ry="'+(oh/2)+'" fill="#5a282d" stroke="#461e23" stroke-width="2"/>'
     + tongue + arrow(-1) + arrow(1) + '</svg>';
 }
+/* HL-BEGIN — 예시 단어에서 카드 글자가 든 음절을 <b class="hl">로(간단 보기에도 같은 함수 사용)
+ * 모음 = 가운데 소리 · 자음 = 첫소리 · 받침(kind에 받침/final) = 끝소리 · 세 소리(바 파 빠) = 단어 순서대로 첫소리
+ * 연음(옷 + 이) = 앞 글자의 받침으로 끝나는 음절 + 뒤 ㅇ 음절 두 개 */
+var CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ', JUNG='ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ',
+    JONG=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+function jamo(ch){ var n=ch.charCodeAt(0)-0xAC00; if(!(n>=0&&n<=11171)){ return null; } return [CHO.charAt(Math.floor(n/588)), JUNG.charAt(Math.floor(n%588/28)), JONG[n%28]]; }
+function hlWord(c){
+  var w=String(c.word||''), g=String(c.glyph||''), parts=g.split(' '), on=[], k, j, allJ=true;
+  for(k=0;k<w.length;k++){ on.push(false); }
+  for(k=0;k<parts.length;k++){ if(!(parts[k].length===1 && (CHO.indexOf(parts[k])>-1 || JUNG.indexOf(parts[k])>-1))){ allJ=false; } }
+  if(g.indexOf('+')>-1){                                   /* 연음 */
+    var a=jamo(g.split('+')[0].replace(/\s/g,'').slice(-1)), fin=a?a[2]:'';
+    for(k=0;k+1<w.length;k++){ var p=jamo(w.charAt(k)), q=jamo(w.charAt(k+1));
+      if(p&&q&&fin&&p[2]===fin&&q[0]==='ㅇ'){ on[k]=true; on[k+1]=true; } }
+  } else if(allJ){                                         /* 모음 · 자음 · 받침 */
+    var pos = JUNG.indexOf(parts[0])>-1 ? 1 : (/받침|final/.test(c.kind||'') ? 2 : 0);
+    for(k=0;k<w.length;k++){ var m=jamo(w.charAt(k)); if(m && parts.indexOf(m[pos])>-1){ on[k]=true; } }
+  } else {                                                 /* 세 소리: 바 파 빠 ↔ 비 · 피 · 아빠 */
+    var ws=w.split(' · ');
+    if(parts.length>1 && ws.length===parts.length){
+      var off=0;
+      for(j=0;j<ws.length;j++){ var t=jamo(parts[j].charAt(0));
+        for(k=0;k<ws[j].length;k++){ var m2=jamo(ws[j].charAt(k)); if(t&&m2&&m2[0]===t[0]){ on[off+k]=true; } }
+        off+=ws[j].length+3; }
+    }
+  }
+  var h='', open=false;
+  for(k=0;k<w.length;k++){
+    if(on[k]&&!open){ h+='<b class="hl">'; open=true; }
+    if(!on[k]&&open){ h+='</b>'; open=false; }
+    h+=esc(w.charAt(k));
+  }
+  return h+(open?'</b>':'');
+}
+/* HL-END */
 function nbh(s){ return esc(s).replace(/-/g,'&#8209;'); }  /* 로마자는 하이픈에서 줄바꿈하지 않음 */
 function esc(s){ return String(s===undefined||s===null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-var L=0, cat='all', queue=[], i=0, wrong=[], known=0;
+var L=0, cat='all', queue=[], i=0, res=[];  /* res[i]: true = 알아요 체크 · 없음 = 체크 안 함 */
 function $(id){ return document.getElementById(id); }
 var cardEl;
 
@@ -682,52 +735,51 @@ function showLesson(){
     return;
   }
   $('locked').className='locked hide'; $('open').className='';
-  var h='';
+  /* 분류 목록: "외울 단어 ★ Memorize (8)" — 카드 수 함께 */
+  var sel=$('cats'); sel.options.length=0;
   for(var c=0;c<s.cats.length;c++){
-    h += '<button class="chip'+(c===0?' on':'')+'" data-cat="'+esc(s.cats[c].id)+'">'+esc(s.cats[c].label)+'</button>';
+    var id=s.cats[c].id, n=0;
+    for(var k=0;k<s.cards.length;k++){ if(id==='all'||s.cards[k].cat===id){ n++; } }
+    sel.options[sel.options.length]=new Option(s.cats[c].label+' ('+n+')', id);
   }
-  $('cats').innerHTML=h;
-  var bs=$('cats').getElementsByTagName('button');
-  for(var k=0;k<bs.length;k++){ bs[k].onclick=chooseCat; }
+  sel.selectedIndex=0; sel.onchange=chooseCat;
   cat='all'; build();
 }
-function chooseCat(){
-  var bs=$('cats').getElementsByTagName('button');
-  for(var k=0;k<bs.length;k++){ bs[k].className='chip'; }
-  this.className='chip on';
-  cat=this.getAttribute('data-cat'); build();
-}
+function chooseCat(){ cat=this.value; build(); }
 function build(){
   var src=LESSONS[L].cards; queue=[];
   for(var n=0;n<src.length;n++){ if(cat==='all'||src[n].cat===cat){ queue.push(src[n]); } }
-  i=0; wrong=[]; known=0;
+  i=0; res=[];
   $('result').className='done hide'; $('study').className='';
   render();
 }
 function shuffle(){
   for(var k=queue.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=queue[k]; queue[k]=queue[j]; queue[j]=t; }
-  i=0; render();
+  i=0; res=[]; render();
 }
 function render(){
   if(i>=queue.length){ finish(); return; }
   var c=queue[i];
   cardEl.className='card';
-  $('front').innerHTML='<div class="glyph '+(c.sz||'g2')+'">'+esc(c.glyph)+'</div>'
-    +'<div class="kind">'+esc(c.kind)+'</div>';
-  var sp='<button class="speak" data-say="'+esc(c.say)+'" data-au="'+esc(c.au)+'">&#128266;</button>';
+  $('front').innerHTML='<div class="glyph '+(c.sz||'g2')+'">'+esc(c.glyph).replace(/ \/ /g,'<br>')+'</div>'
+    +'<div class="kind">'+esc(c.kind)+'</div>'+(res[i]?'<div class="okmark">&#10003;</div>':'');
+  var sp='<button class="speak" data-say="'+esc(c.say)+'" data-au="'+esc(c.au)+'">&#128266;</button>'
+    +'<button class="ok'+(res[i]?' on':'')+'" data-ok="1"><span class="box">'+(res[i]?'&#10003;':'')+'</span>알아요 OK</button>';
   if(c.type==='letter'){
     $('back').innerHTML=sp
       + (c.m ? mouth(c.m[0],c.m[1],c.m[2]) : '')
       + '<div class="rom">'+nbh(c.rom)+'</div><div class="tip-ko">'+esc(c.ko)+'</div>'
       + '<div class="tip-en'+(c.warn?' warn':'')+'">'+esc(c.en)+'</div>'
-      + (c.word ? '<div class="word">'+esc(c.word)+(c.gloss?'<span>'+esc(c.gloss)+'</span>':'')+'</div>' : '');
+      + (c.word ? '<div class="word">'+hlWord(c)+(c.gloss?'<span>'+esc(c.gloss)+'</span>':'')+'</div>' : '');
   } else {
     $('back').innerHTML=sp
       + '<div class="item"><div class="rom">'+nbh(c.rom)+'</div><div class="mean">'+esc(c.mean)+'</div>'
       + '<div class="when'+(c.warn?' warn':'')+'">'+esc(c.when)+'</div></div>';
   }
+  fitFront();
   fitBack();
-  $('count').innerHTML=(i+1)+' / '+queue.length;
+  var okn=okCount();
+  $('count').innerHTML=(i+1)+' / '+queue.length+(okn?'<span class="ok-n">&#10003; '+okn+'</span>':'');
   $('fill').style.width=((i/queue.length)*100)+'%';
   $('prev').disabled=(i===0);
 }
@@ -735,10 +787,37 @@ function render(){
 function fitBack(){
   var b=$('back'), px=16;
   b.style.fontSize=px+'px';
-  while(px>11 && (b.scrollHeight>b.clientHeight+1 || b.scrollWidth>b.clientWidth+1)){ px--; b.style.fontSize=px+'px'; }
+  while(px>11 && (b.scrollHeight>b.clientHeight+1 || b.scrollWidth>b.clientWidth+1 || hitsOk(b))){ px--; b.style.fontSize=px+'px'; }
 }
-function advance(ok){ if(ok){known++;}else{wrong.push(queue[i]);} i++; render(); }
+/* 앞면 단어·표현·문장: 64px에서 시작해 카드에 들어갈 때까지 줄임(최소 24px). 자음·모음(v)은 그대로 */
+function fitFront(){
+  var f=$('front'), g=f.getElementsByTagName('div')[0];
+  if(!g || g.className.indexOf(' v')>-1){ return; }
+  var px=64; g.style.fontSize=px+'px';
+  while(px>24 && (f.scrollHeight>f.clientHeight+1 || g.scrollWidth>f.clientWidth-28 || g.offsetTop<44)){ px-=2; g.style.fontSize=px+'px'; }
+}
+/* 체크 상자(왼쪽 위)에 첫 줄이 닿는지 */
+function hitsOk(b){
+  var ok=null, top=99999, cs=b.children;
+  for(var k=0;k<cs.length;k++){
+    if(cs[k].className.indexOf && cs[k].className.indexOf('ok')===0){ ok=cs[k]; }
+    else if(cs[k].className!=='speak'){ top=Math.min(top, cs[k].offsetTop); }
+  }
+  return ok ? top < ok.offsetTop+ok.offsetHeight+2 : false;
+}
+/* 체크(카드 안): 누를 때마다 체크 ↔ 해제. 넘어가지 않음 */
+function toggleOk(){
+  if(res[i]){ delete res[i]; } else { res[i]=true; }
+  render(); cardEl.className='card flipped';
+}
+function okCount(){ var n=0; for(var k=0;k<queue.length;k++){ if(res[k]){ n++; } } return n; }
+/* 이동(카드 밖): 기록 없이 앞뒤로. 마지막 카드에서 다음 → 결과 */
+function goNext(){ if(i<queue.length-1){ i++; render(); } else { finish(); } }
+function goPrev(){ if(i>0){ i--; render(); } }
 function finish(){
+  var known=0, wrong=[];
+  for(var k=0;k<queue.length;k++){ if(res[k]===true){ known++; } else { wrong.push(queue[k]); } }
+  lastWrong=wrong;
   $('study').className='hide'; $('result').className='done';
   $('fill').style.width='100%';
   $('count').innerHTML=queue.length+' / '+queue.length;
@@ -748,6 +827,7 @@ function finish(){
     ? '전부 맞혔습니다. 잘했어요!  Perfect!'
     : '다시 볼 카드 '+wrong.length+'장 \u00B7 '+wrong.length+' to review';
 }
+var lastWrong=[];
 function toggleCard(){
   cardEl.className=(cardEl.className.indexOf('flipped')>-1)?'card':'card flipped';
 }
@@ -781,25 +861,25 @@ window.onload=function(){
     var t=(e&&e.target)||null;
     while(t&&t!==cardEl){
       if(t.className==='speak'){ play(t.getAttribute('data-au'), t.getAttribute('data-say')); return; }
+      if(t.getAttribute && t.getAttribute('data-ok')){ if(cardEl.className.indexOf('flipped')>-1){ toggleOk(); } return; }
       t=t.parentNode;
     }
     toggleCard();
   };
-  $('know').onclick=function(){ advance(true); };
-  $('again').onclick=function(){ advance(false); };
-  $('prev').onclick=function(){ if(i>0){ i--; render(); } };
+  $('next').onclick=goNext;
+  $('prev').onclick=goPrev;
   $('shuffle').onclick=shuffle;
   $('retryAll').onclick=build;
   $('retryWrong').onclick=function(){
-    queue=wrong.slice(0); i=0; wrong=[]; known=0;
+    queue=lastWrong.slice(0); i=0; res=[];
     $('result').className='done hide'; $('study').className=''; render();
   };
   document.onkeydown=function(e){
     if($('open').className==='hide'){ return; }
     var k=e.keyCode;
     if(k===32){ if(e.preventDefault){ e.preventDefault(); } toggleCard(); }
-    if(k===39){ if(i<queue.length){ i++; render(); } }
-    if(k===37){ if(i>0){ i--; render(); } }
+    if(k===39){ goNext(); }
+    if(k===37){ goPrev(); }
   };
   lessonChips();
   /* 처음 열 때: 열린 과 중 마지막 과를 보여 준다 */
